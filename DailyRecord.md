@@ -288,3 +288,92 @@
       >又因为是连续的，那么连续元素的求和可以用第一项x和和个数k求得。
 
       > 分情况讨论k的奇偶性，和x是否为正整数（如果是，那么这个以x开始的连续情况就是合法的）。
+
+- #### [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/)
+
+  - 回溯
+
+    - 代码
+
+      ```java
+      class Solution {
+          List<Integer>[] match;
+          boolean[] vis;
+          int num;
+      
+          public int countArrangement(int n) {
+              vis = new boolean[n + 1];
+              match = new List[n + 1];
+              for (int i = 0; i <= n; i++) {
+                  match[i] = new ArrayList<Integer>();
+              }
+              for (int i = 1; i <= n; i++) {
+                  for (int j = 1; j <= n; j++) {
+                      if (i % j == 0 || j % i == 0) {
+                          match[i].add(j);
+                      }
+                  }
+              }
+              backtrack(1, n);
+              return num;
+          }
+      
+          public void backtrack(int index, int n) {
+              if (index == n + 1) {
+                  num++;
+                  return;
+              }
+              for (int x : match[index]) {
+                  if (!vis[x]) {
+                      vis[x] = true;
+                      backtrack(index + 1, n);
+                      vis[x] = false;
+                  }
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 回溯法始终维护着一个列表的index，每当进行到index时，会有几种选择，选中一个继续深入返回后继续选中下一个。
+
+      > 对于本题，当进行到index时，进行满足这个`(i % j == 0 || j % i == 0)`条件的选择。
+
+      > 为了减少时间复杂度，提前为每个index进行了选择，记录在数组match中
+
+      > 回溯的时间复杂度为：O(n!)
+
+  - 状态压缩+动态规划
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int countArrangement(int n) {
+              int[] f = new int[1 << n];
+              f[0] = 1;
+              for (int mask = 1; mask < (1 << n); mask++) {
+                  int num = Integer.bitCount(mask);
+                  for (int i = 0; i < n; i++) {
+                      if ((mask & (1 << i)) != 0 && ((num % (i + 1)) == 0 || (i + 1) % num == 0)) {
+                          f[mask] += f[mask ^ (1 << i)];
+                      }
+                  }
+              }
+              return f[(1 << n) - 1];
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 在状态压缩中，二进制的位数代表列表的长度；二进制位的选取代表列表中该位元素的选取；二进制整体的不同取值代表了不同的状态，总共有2^n
+
+      > 状态压缩的递推过程同动态规划的转移方程，递推是该状态所对应的大二进制任意去掉一位的小二进制进化而来。
+
+      > 最底层的二进制位，是n个只有一个1的二进制，是最初的二进制，上层的二进制都经过这层二进制位进化而来。我说的层，是二进制中1的个数。
+
+      > 关键是，理清楚状态与实际列表对应关系和状态转移方程
+
+      > 状态压缩的时间复杂度为 : O(2^n)
