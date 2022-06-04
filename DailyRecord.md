@@ -377,3 +377,121 @@
       > 关键是，理清楚状态与实际列表对应关系和状态转移方程
 
       > 状态压缩的时间复杂度为 : O(2^n)
+
+### 2022-6-4
+
+- #### [929. 独特的电子邮件地址](https://leetcode.cn/problems/unique-email-addresses/)
+
+  - 哈希表
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int numUniqueEmails(String[] emails) {
+              Set<String> emailSet = new HashSet<String>();
+              for(String email : emails){
+                  int i = email.indexOf('@');
+                  String local = email.substring(0,i).split("\\+")[0];
+                  local = local.replace(".","");
+                  emailSet.add(local+email.substring(i));
+              }
+              return emailSet.size();
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      >`str.substring(i)`返回一个新的字符串，该新的字符串以`i`开头直至结尾。
+
+      > `str.substring(i,j)`返回一个新的字符串，该新的字符串以`i`开头,以`j`结尾，左闭右开。
+
+      > split() 方法根据匹配给定的正则表达式来拆分字符串。
+      >
+      > **注意：** . 、 $、+、-、 | 和 * 等转义字符，必须得加 `\\`。
+      >
+      > **注意：**多个分隔符，可以用 | 作为连字符。
+      >
+      > ```java
+      > public String[] split(String regex, int limit)
+      > ```
+      >
+      > 参数
+      >
+      > - **regex** -- 正则表达式分隔符。
+      > - **limit** -- 分割的份数。
+      >
+      > 返回值
+      >
+      > 字符串数组。
+
+- #### [638. 大礼包](https://leetcode.cn/problems/shopping-offers/)
+
+  - 记忆化搜索
+
+    - 代码
+
+      ```java
+      class Solution {
+          //记忆化搜索，记忆那些已经保存过的'need'状态。以便直接被上层调用，减少复杂度。
+          Map<List<Integer>,Integer> memo = new HashMap<List<Integer>,Integer>();
+      
+          public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+              //记录有多少种可买的商品。
+              int n = price.size();
+      
+              //过滤那些无法进行优惠的大礼包
+              List<List<Integer>> filterSpecial = new ArrayList<List<Integer>>();
+              for(List<Integer> sp : special){
+                  int totalCount = 0,totalPrice = 0;
+                  for(int i=0;i<n;i++){
+                      totalCount+=sp.get(i);
+                      totalPrice+=sp.get(i)*price.get(i);
+                  }
+                  if(totalCount>0 && totalPrice>sp.get(n)){
+                      filterSpecial.add(sp);
+                  }
+              }
+              return dfs(price,special,needs,filterSpecial,n);
+          }
+      
+          //记忆化搜素计算满足购物清单的最低价格
+          public int dfs(List<Integer> price,List<List<Integer>> special,List<Integer> curNeeds,List<List<Integer>> filterSpecial,int n){
+              //只计算还没记忆化的购物清单状态
+              if(!memo.containsKey(curNeeds)){
+                  int minPrice = 0;
+                  for(int i=0;i<n;i++){
+                      minPrice+=curNeeds.get(i)*price.get(i);//在当前购物状态下，不购买任何大礼包的情况，原价购买购物清单中的所有物品。
+                  }
+                  for(List<Integer> curSpecial : filterSpecial){
+                      int specialPrice = curSpecial.get(n);
+                      List<Integer> nxtNeeds = new ArrayList<Integer>();
+                      for(int i=0;i<n;i++){
+                          if(curSpecial.get(i)>curNeeds.get(i)){ //不能够购买超出购物清单数量的物品。
+                              break;
+                          }
+                          nxtNeeds.add(curNeeds.get(i)-curSpecial.get(i));
+                      }
+                      if(nxtNeeds.size()==n){ //该大礼包并没有超出限制，可以购买
+                          minPrice = Math.min(minPrice,dfs(price,special,nxtNeeds,filterSpecial,n)+specialPrice);
+                      }
+                  }
+                  memo.put(curNeeds,minPrice);
+              }
+              return memo.get(curNeeds);
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 采用记忆化，对于一个特定的购物清单状态只需要计算一次, 下一次高层可以直接调用。
+
+      > 不同于回溯，这个将上层的问题，递归的推迟到下层、下层层、、、，在返回时选取最优子结构。
+
+      > 因为`1<=needs<<6 and 0<=needs[i]<=10`，所以最多只有 11^6 = 1771561 种不同的购物清单`needs`。我们可以将所有可能的购物清单作为状态，并考虑这些状态之间相互转移的方法。
+
+      > 因为大礼包中可能包含多个物品，所以并不是所有状态都可以得到。
+
+      > 我们也可以考虑使用状态压缩的方法来存储购物清单 `needs`。但是因为购物清单中每种物品都可能有 [0,10] 个，使用状态压缩需要设计一个相对复杂的方法来解决计算状态变化以及比较状态大小的问题，性价比较低。
