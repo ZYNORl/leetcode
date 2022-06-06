@@ -495,3 +495,292 @@
       > 因为大礼包中可能包含多个物品，所以并不是所有状态都可以得到。
 
       > 我们也可以考虑使用状态压缩的方法来存储购物清单 `needs`。但是因为购物清单中每种物品都可能有 [0,10] 个，使用状态压缩需要设计一个相对复杂的方法来解决计算状态变化以及比较状态大小的问题，性价比较低。
+
+### 2022-6-5
+
+- [478. 在圆内随机生成点](https://leetcode.cn/problems/generate-random-point-in-a-circle/)
+
+  - 数学——拒绝采样
+
+    - 代码
+
+      ```java
+      class Solution {
+          Random random;
+          double xc,yc,r;
+          public Solution(double radius, double x_center, double y_center) {
+              random = new Random();
+              xc = x_center;
+              yc = y_center;
+              r = radius;
+          }
+          
+          public double[] randPoint() {
+              while(true){
+                  double x = random.nextDouble()*(2*r)-r;
+                  double y = random.nextDouble()*(2*r)-r;
+                  if(x*x+y*y<r*r){
+                      return new double[]{xc+x,yc+y};
+                  }
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 不失一般性，我们只考虑在原点且半径为 11 的单位圆。对于非一般性的情况，我们只需要把生成的点的坐标根据半径等比例放大，再根据圆心坐标进行平移即可。
+
+      > `public double nextDouble()`
+      > Returns a pseudorandom double value between zero (inclusive) and one (exclusive).
+
+      > `public double nextDouble(double bound)`
+      > Returns a pseudorandom double value between 0.0 (inclusive) and the specified bound (exclusive).
+
+
+### 2022-6-6
+
+- #### [729. 我的日程安排表 I](https://leetcode.cn/problems/my-calendar-i/)
+
+  - 暴力法
+
+    - 代码
+
+      ```java
+      public class MyCalendar {
+          List<int[]> calendar;
+          MyCalendar() {
+              calendar = new ArrayList();
+          }
+          public boolean book(int start, int end) {
+              for (int[] iv: calendar) {
+                  if (iv[0] < end && start < iv[1]) return false;
+              }
+              calendar.add(new int[]{start, end});
+              return true;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 我们将维护一个日程安排列表（不一定要排序）。当且仅当其中一个日程安排在另一个日程安排结束后开始时，两个日程安排 [s1，e1) 和 [s2，e2) 不冲突：e1<=s2 或 e2<=s1。这意味着当 s1<e2 和 s2<e1 时，日程安排发生冲突。
+
+      > 运算规则：$\frac{}{AUB} == \frac{}{A}n\frac{}{B}$
+
+  - 差分数组，插旗法
+
+    - 代码
+
+      ```java
+      class MyCalendar {
+          TreeMap<Integer, Integer> delta;
+          public MyCalendar() {
+              delta = new TreeMap();
+          }
+          public boolean book(int start, int end) {
+              delta.put(start, delta.getOrDefault(start, 0) + 1);
+              delta.put(end, delta.getOrDefault(end, 0) - 1);
+              int active = 0;
+              for (int d: delta.values()) {
+                  active += d;
+                  if (active >= 2) {
+                      delta.put(start, delta.get(start) - 1);
+                      delta.put(end, delta.get(end) + 1);
+                      return false;
+                  }
+              }
+              return true;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > `TreeMap`是底层用红黑树实现，可以对`map`中的`key`进行排序（一种平衡二叉排序树），对当个元素的插入、查询、删除可以实现`O(lg(n))`的时间复杂度。通过`TreeMap`，我们按时间顺序维护日程安排。
+
+      > 先来介绍一下插旗法：进入一个区间的时候将该点坐标对应的值+1，代表插上一面进入的🚩，离开时将该点坐标值-1，代表插上一面离开的🚩，在同一个点可以同时插进入的旗或离开的旗，因为这样并不形成区间重叠。
+      >
+
+      > 插旗法理解起来就像是左右括号一样，进入🚩就是左括号，出去🚩就是右括号，左右🚩可以抵消，就像左右括号可以抵消一样，题目这样就变成了如果你在两个以上的==括号嵌套==内就返回false，其余返回true。这个括号嵌套的层数，就是时间段重叠的个数。
+
+
+
+- #### [731. 我的日程安排表 II](https://leetcode.cn/problems/my-calendar-ii/)
+
+  - 暴力法
+
+    - 代码
+
+      ```java
+      class MyCalendarTwo {
+          List<int[]> calendar;
+          List<int[]> overlaps;
+          public MyCalendarTwo() {
+              calendar = new ArrayList();
+              overlaps = new ArrayList();
+          }
+          public boolean book(int start, int end) {
+              for(int[] iv:overlaps){
+                  if(iv[0]<end && start<iv[1]) return false;
+              }
+              for(int[] iv : calendar){
+                  if(iv[0]<end&&start<iv[1]){
+                      overlaps.add(new int[]{Math.max(start,iv[0]),Math.min(end,iv[1])});
+                  }
+              }
+              calendar.add(new int[]{start,end});
+              return true;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 维护一重预订列表和双重预订列表。当预订一个新的日程安排 `[start, end)` 时，如果它与双重预订列表冲突，则会产生三重预定。
+
+      > - 如果新的日程安排与双重预订冲突，则返回 `false`。否则，我们会将与一重预定列表冲突的时间添加到双重预订列表中，并将该预定添加到一重预定列表中。
+
+  - 差分数组，插旗法
+
+    - 代码
+
+      ```java
+      class MyCalendarTwo {
+          TreeMap<Integer,Integer> delta;
+          public MyCalendarTwo() {
+              delta = new TreeMap();
+          }
+          public boolean book(int start, int end) {
+              delta.put(start,delta.getOrDefault(start,0)+1);
+              delta.put(end,delta.getOrDefault(end,0)-1);
+              int active = 0;
+              for(int d:delta.values()){
+                  active+=d;
+                  if(active>=3){
+                      delta.put(start,delta.get(start)-1);
+                      delta.put(end,delta.get(end)+1);
+                      return false;
+                  }
+              }
+              return true;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 模板代码：
+      >
+      > > 这种方法非常适合解最大的区间重叠数量 (或最大的并行数量) 的题目，能够将时间复杂度控制在 O(nlog{n})*O*(*n**l**o**g**n*)，而且代码可以说是八九不离十。
+      >
+      > ```java
+      > class MyCalendarTwo {
+      >     TreeMap<Integer,Integer> delta;
+      >     public MyCalendarTwo() {
+      >         delta = new TreeMap();
+      >     }
+      >     public boolean book(int start, int end) {
+      >         delta.put(start,delta.getOrDefault(start,0)+1);
+      >         delta.put(end,delta.getOrDefault(end,0)-1);
+      >         int active = 0;
+      >         for(int d:delta.values()){
+      >             active+=d;
+      >             if(active>=???){ //???,代表几重
+      >                 delta.put(start,delta.get(start)-1);
+      >                 delta.put(end,delta.get(end)+1);
+      >                 return false;
+      >             }
+      >         }
+      >         return true;
+      >     }
+      > }
+      > ```
+
+- #### [732. 我的日程安排表 III](https://leetcode.cn/problems/my-calendar-iii/)
+
+  - 差分数组，插旗法
+
+    - 代码
+
+      ```java
+      class MyCalendarThree {
+          private TreeMap<Integer, Integer> delta;
+          public MyCalendarThree() {
+              delta = new TreeMap();
+          }
+          public int book(int start, int end) {
+              int ans = 0;
+              int active = 0;
+              delta.put(start, delta.getOrDefault(start, 0) + 1);
+              delta.put(end, delta.getOrDefault(end, 0) - 1);
+              for(int d:delta.values()){
+                  active+=d;
+                  ans = Math.max(active,ans);
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 总结与感悟
+
+      > 同上
+
+  - 线段树
+
+    - 代码
+
+      ```java
+      class MyCalendarThree{
+          private Map<Integer,Integer> tree;
+          private Map<Integer,Integer> lazy;
+          public MyCalendarThree(){
+              tree = new HashMap<Integer,Integer>();
+              lazy = new HashMap<Integer,Integer>();
+          }
+          public int book(int start,int end){
+              update(start,end-1,0,1000000000,1);
+              return tree.getOrDefault(1,0);
+          }
+          public void update(int start,int end,int l,int r,int idx){
+              if(r<start || end<l){
+                  return;
+              }
+              if(start<=l && r<=end){
+                  tree.put(idx,tree.getOrDefault(idx,0)+1);
+                  lazy.put(idx,lazy.getOrDefault(idx,0)+1);
+              }else{
+                  int mid = (l+r)>>1;
+                  update(start,end,l,mid,2*idx);
+                  update(start,end,mid+1,r,2*idx+1);
+                  tree.put(idx,lazy.getOrDefault(idx,0)+Math.max(tree.getOrDefault(2*idx,0),tree.getOrDefault(2*idx+1,0)));
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > `tree`是整体线段树；`lazy`是每个分段。它们中的线段都有`idx`进行标识。
+
+      > 题意限制：
+      >
+      > - `0 <= start < end <= 109`
+      > - 给你一些日程安排 `[start, end)`
+      >
+      > - `MyCalendarThree()` 初始化对象。
+      > - `int book(int start, int end)` 返回一个整数 k ，表示日历中存在的 k 次预订的最大值。
+      >
+      > 根据题意，线段树的区间为`[0,1000000000]`，且每个点都是整数。对于代码第九行，为什么end要减一，是因为end是开区间取不到，且是整数，所以为了各个线段区间不重复，才这样考虑。
+
+      > 对于递归：
+      >
+      > - 如果无交叉则返回，说明不更新线段树的该分段；
+      > - 如果覆盖，级分段区间小于给定区间，则直接加一，有点类似叶子节点。
+      > - 如果交叉，则对该分段区间进行分解，可以把该分段区间理解为父节点，分解后递归子节点后更新父节点。
+
+      > 线段树更详细的解释可以看下面🔗：
+      >
+      > [线段树]: https://leetcode.cn/problems/my-calendar-iii/solution/xian-duan-shu-by-xiaohu9527-rfzj/
+
