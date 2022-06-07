@@ -832,3 +832,191 @@
       > 初始时，speed左边界为1，右边界为所有堆里面的最大值。
 
       > 在二分查找的过程中，根据是否能在规定时间内吃完来调整mid
+
+- #### [698. 划分为k个相等的子集](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/)
+
+  - 状态压缩
+
+    - 代码
+
+      ```java
+      class Solution {
+          public boolean canPartitionKSubsets(int[] nums, int k) {
+              if(k==1){
+                  return true;
+              }
+              int len = nums.length;
+              Arrays.sort(nums);
+              int sum = 0;
+              for(int num : nums){
+                  sum+=num;
+              }
+              if(sum%k!=0){
+                  return false;
+              }
+              int target = sum/k;
+              if(nums[len-1]>target){
+                  return false;
+              }
+             
+              int size = 1<<len;
+              boolean[] dp = new boolean[size];
+              dp[0] = true;
+              int[] currentSum = new int[size];
+              for(int i=0;i<size;i++){
+                  //z
+                  if(dp[i]!=true){
+                      continue;
+                  }
+                  //基于当前状态，添加一个数以后
+                  for(int j=0;j<len;j++){
+                      if((i&(1<<j))!=0){
+                          continue;
+                      }
+                      int next = i|(1<<j);
+                      if(dp[next]==true){
+                          continue;
+                      }
+                      if((currentSum[i]%target)+nums[j]<=target){
+                          currentSum[next] = currentSum[i]+nums[j];
+                          dp[next] = true;
+                      }else{
+                          //由于数组已经排好序了，剩下的就没必要枚举了
+                          break;
+                      }
+      
+                  }
+              }
+              return dp[size-1];
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 如果把k个相同的子集看作K个相同的桶，把子集里面的元素当成球。那么最大的球一定比桶小，否则就放不下了。
+      >
+      > 这个条件也就决定了代码38行在每次只选取一个球的正确性，因为要么更小，要么恰好接着下一个，不能更大。
+
+      > 那为什么size-1时会有更小和恰好两种情况下都是true呢。因为，在这两种情况和size-1下，就只有一个桶没满了，其它都满了，那么这个桶肯定会满。他是通过%==0来开始下一个桶的。
+
+  - 回溯
+
+    - 代码--球视角
+
+      ```java
+      public boolean canPartitionKSubsets(int[] nums, int k) {
+          int sum = 0;
+          for (int i = 0; i < nums.length; i++) sum += nums[i];
+          if (sum % k != 0) return false;
+          int target = sum / k;
+          int[] bucket = new int[k + 1];
+          return backtrack(nums, 0, bucket, k, target);
+      }
+      // index : 第 index 个球开始做选择
+      // bucket : 桶
+      private boolean backtrack(int[] nums, int index, int[] bucket, int k, int target) {
+      
+          // 结束条件：已经处理完所有球
+          if (index == nums.length) {
+              // 判断现在桶中的球是否符合要求 -> 路径是否满足要求
+              for (int i = 0; i < k; i++) {
+                  if (bucket[i] != target) return false;
+              }
+              return true;
+          }
+      
+          // nums[index] 开始做选择
+          for (int i = 0; i < k; i++) {
+              // 剪枝：放入球后超过 target 的值，选择一下桶
+              if (bucket[i] + nums[index] > target) continue;
+              // 做选择：放入 i 号桶
+              bucket[i] += nums[index];
+      
+              // 处理下一个球，即 nums[index + 1]
+              if (backtrack(nums, index + 1, bucket, k, target)) return true;
+      
+              // 撤销选择：挪出 i 号桶
+              bucket[i] -= nums[index];
+          }
+      
+          // k 个桶都不满足要求
+          return false;
+      }
+      ```
+
+    - 代码---桶视角
+
+      ```java
+      // 备忘录，存储 used 的状态
+      private HashMap<Integer, Boolean> memo = new HashMap<>();
+      
+      public boolean canPartitionKSubsets(int[] nums, int k) {
+          int sum = 0;
+          for (int i = 0; i < nums.length; i++) sum += nums[i];
+          if (sum % k != 0) return false;
+          int target = sum / k;
+          // 使用位图技巧
+          int used = 0;
+          int[] bucket = new int[k + 1];
+          return backtrack(nums, 0, bucket, k, target, used);
+      }
+      private boolean backtrack(int[] nums, int start, int[] bucket, int k, int target, int used) {
+          // k 个桶均装满
+          if (k == 0) return true;
+      
+          // 当前桶装满了，开始装下一个桶
+          if (bucket[k] == target) {
+              // 注意：桶从下一个开始；球从第一个开始
+              boolean res = backtrack(nums, 0, bucket, k - 1, target, used);
+              memo.put(used, res);
+              return res;
+          }
+      
+          if (memo.containsKey(used)) {
+              // 如果当前状态曾今计算过，就直接返回，不要再递归穷举了
+              return memo.get(used);
+          }
+      
+          // 第 k 个桶开始对每一个球选择进行选择是否装入
+          for (int i = start; i < nums.length; i++) {
+              // 如果当前球已经被装入，则跳过
+              if (((used >> i) & 1) == 1) continue;
+              // 如果装入当前球，桶溢出，则跳过
+              if (bucket[k] + nums[i] > target) continue;
+      
+              // 装入 && 标记已使用
+              bucket[k] += nums[i];
+              // 将第 i 位标记为 1
+              used |= 1 << i;
+      
+              // 开始判断是否选择下一个球
+              // 注意：桶依旧是当前桶；球是下一个球
+              // 注意：是 i + 1
+              if (backtrack(nums, i + 1, bucket, k, target, used)) return true;
+      
+              // 拿出 && 标记未使用
+              bucket[k] -= nums[i];
+              // 将第 i 位标记为 0
+              used ^= 1 << i;
+          }
+          // 如果所有球均不能使所有桶刚好装满
+          return false;
+      }
+      ```
+
+    - 感悟与总结
+
+      > 对列表排序一般都可以提高回溯
+
+      > 回溯有三大要素：
+      >
+      > - 路径：已经做出的选择
+      > - 选择列表：当前可以做的选择
+      > - 结束条件：到达决策树底层，无法再做选择的条件
+
+      > 根据选择的主人不同，可以有不同的视角。如：上面的桶视角和球视角。回溯一般都是指数函数，指数函数的底的大小就是最初最大可选择的个数。要根据视角选择指数函数底更小的时间复杂度。
+
+      > 可以使用位运算来当作`hashmap`的key，状态压缩也是这样的应用。
+
+      > [经典回溯算法：集合划分问题「重要更新]: https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/solution/by-lfool-d9o7/
