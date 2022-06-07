@@ -784,3 +784,51 @@
       >
       > [线段树]: https://leetcode.cn/problems/my-calendar-iii/solution/xian-duan-shu-by-xiaohu9527-rfzj/
 
+### 2022-6-7
+
+- #### [875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/)
+
+  - 二分法
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int minEatingSpeed(int[] piles, int h) {
+              int low = 1;
+              int high = 1;
+              for(int pile:piles){
+                  high = Math.max(high,pile);
+              }
+              int ans = high;
+              while(low<high){
+                  int speed = (high+low)>>1;
+                  long time = getTime(piles,speed);
+                  if(time<=h){
+                      high = speed;
+                      ans = high;
+                  }else{
+                      low = speed+1;
+                  }
+              }
+              return ans;
+          }
+          public long getTime(int[] piles,int speed){
+              long time = 0;
+              for(int pile:piles){
+                  time+=(pile+speed-1)/speed;
+              }
+              return time;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > $⌈speed/pile⌉$等价于$⌊(speed+pile-1)/speed⌋$
+
+      > 由于吃香蕉的速度和是否可以在规定时间内吃掉所有香蕉之间存在单调性，因此可以使用二分查找的方法得到最小速度 k。	
+
+      > 初始时，speed左边界为1，右边界为所有堆里面的最大值。
+
+      > 在二分查找的过程中，根据是否能在规定时间内吃完来调整mid

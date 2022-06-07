@@ -9,7 +9,7 @@
 | [731. 我的日程安排表 II](https://leetcode.cn/problems/my-calendar-ii/) | 2022-6-6 |
 | [732. 我的日程安排表 III](https://leetcode.cn/problems/my-calendar-iii/) | 2022-6-6 |
 | [829. 连续整数求和](https://leetcode.cn/problems/consecutive-numbers-sum/) | 2022-6-3 |
-|                                                              |          |
+| [875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/) | 2022-6-7 |
 |                                                              |          |
 | [929. 独特的电子邮件地址](https://leetcode.cn/problems/unique-email-addresses/) | 2022-6-4 |
 |                                                              |          |
