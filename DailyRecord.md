@@ -1021,3 +1021,88 @@
 
       > [经典回溯算法：集合划分问题「重要更新 🔥🔥🔥」](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/solution/by-lfool-d9o7/)
 
+### 2022-6-8
+
+- #### [1037. 有效的回旋镖](https://leetcode.cn/problems/valid-boomerang/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public boolean isBoomerang(int[][] points) {
+              if((points[0][0]==points[1][0]&&points[0][1]==points[1][1])||(points[0][0]==points[2][0]&&points[0][1]==points[2][1])||(points[2][0]==points[1][0]&&points[2][1]==points[1][1])){
+                  return false;
+              }
+      
+              if((points[0][0]==points[1][0]&&points[1][0]==points[2][0])||(points[0][1]==points[1][1]&&points[1][1]==points[2][1])){
+                  return false;
+              }
+      
+              if(points[0][0]==points[1][0]||points[1][0]==points[2][0]||points[0][0]==points[2][0]||points[0][1]==points[1][1]||points[1][1]==points[2][1]||points[0][1]==points[2][1]){
+                  return true;
+              }
+      
+              if(1.0*(points[1][1]-points[0][1])/(points[1][0]-points[0][0])==1.0*(points[2][1]-points[1][1])/(points[2][0]-points[1][0])){
+                  return false;
+              }
+      
+              return true;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 横坐标或纵坐标，如果三值相等，那么共线。
+      >
+      > 在此基础上，如果只要二值共线，那么一定不共线（因为三坐标互补相同）。
+      >
+      > 在上述基础上，只存在没两值相同的了，所有就可以用斜率计算 (已经排除了分母为0了)。
+
+      > 整数`/`是取模。那么分子乘上`1.0`就变成浮点数，`/`就是除以。
+
+  - 数学 -- 向量交叉积
+
+    - 代码
+
+      ```java
+      class Solution {
+          public boolean isBoomerang(int[][] points) {
+              int[] v1 = {points[1][0]-points[0][0],points[1][1]-points[0][1]};
+              int[] v2 = {points[2][0]-points[0][0],points[2][1]-points[0][1]};
+              return v1[0]*v2[1]-v1[1]*v2[0]!=0;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 判断向量垂直用点乘
+      >
+      > 判断向量平行用叉乘
+
+      > 点乘0是个数，用叉乘0是个向量。
+
+  - #### [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)
+
+    - 位运算
+
+      - 代码
+
+        ```java
+        class Solution {
+            public int singleNumber(int[] nums) {
+                int ans = 0;
+                for(int num:nums){
+                    ans = ans^num;
+                }
+                return ans;
+            }
+        }
+        ```
+
+      - 感悟与总结
+
+        > 不需要额外空间的方法，就往位运算上想
