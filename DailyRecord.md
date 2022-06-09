@@ -1106,3 +1106,179 @@
       - 感悟与总结
 
         > 不需要额外空间的方法，就往位运算上想
+
+### 2022-6-9
+
+- #### [497. 非重叠矩形中的随机点](https://leetcode.cn/problems/random-point-in-non-overlapping-rectangles/)
+
+  - #### 前缀和 + 二分查找
+
+    - 代码
+
+      ```java
+      class Solution {
+          List<Integer> sumAreaList;
+          Random random;
+          int[][] rects;
+          public Solution(int[][] rects) {
+              this.rects = rects;
+              sumAreaList = new ArrayList();
+              random = new Random();
+              sumAreaList.add(0);
+              for(int[] rect : rects){
+                  int area = (rect[2]-rect[0]+1)*(rect[3]-rect[1]+1);
+                  int lastSum = sumAreaList.get(sumAreaList.size()-1);
+                  sumAreaList.add(lastSum+area);
+              }
+          }
+          
+          public int[] pick() {
+              int value = random.nextInt(sumAreaList.get(sumAreaList.size()-1))+1;
+              int left = 0;
+              int right = sumAreaList.size()-1;
+              while(left<right){
+                  int mid = (left+right)>>1;
+                  if(sumAreaList.get(mid)>=value){
+                      right = mid;
+                  }else{
+                      left = mid+1;
+                  }
+              }
+              int[] curRect = rects[right-1]; //因为前缀多了一个0首位
+              int x = random.nextInt(curRect[2]-curRect[0]+1)+curRect[0];
+              int y = random.nextInt(curRect[3]-curRect[1]+1)+curRect[1];
+              return new int[]{x,y};
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 总体思路：
+      >
+      > 「先随机使用哪个矩形，再随机该矩形内的点」，其中后者是极其容易的，根据矩形特质，只需在该矩形的 XY 坐标范围内随机即可确保等概率，而前者（随机使用哪个矩形）为了确保是等概率，我们不能简单随机坐标，而需要结合面积来做。
+      >
+
+      > 具体的，我们可以预处理前缀和`sumAreaList`（前缀和下标默认从 1 开始），其中 `sumAreaList[i]`代表前 `i` 个矩形的面积之和，最终 `sumAreaList[n]` 为所有矩形的总面积，我们可以在 `[1,sumAreaList[n]]` 范围内随机，假定随机到的值为 `value`，然后利用`sumAreaList`的具有单调性，进行「二分」，找到 valval 所在的矩形。然后在该矩形中进行随机，得到最终的随机点。
+      >
+
+      > 注意二分的使用，尤其代码`23`行。
+
+- #### [191. 位1的个数](https://leetcode.cn/problems/number-of-1-bits/)
+
+  - 位运算
+
+    - 代码
+
+      ```java
+      public class Solution {
+          // you need to treat n as an unsigned value
+          public int hammingWeight(int n) {
+              int ans = 0;
+              for(int i=0;i<32;i++){
+                  if((n&(1<<i))!=0){
+                      ans++;
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 循环检查二进制位
+      >
+      > 我们可以直接循环检查给定整数 n 的二进制位的每一位是否为 1。
+      >
+      > 当检查第 i 位时，我们可以让 n 与 $2^i$ 进行`&`运算，当且仅当 n 的第 i 位为 1 时，运算结果不为 0。
+
+  - 位运算优化
+
+    - 代码
+
+      ```java
+      public class Solution {
+          public int hammingWeight(int n) {
+              int ret = 0;
+              while (n != 0) {
+                  n &= n - 1;
+                  ret++;
+              }
+              return ret;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > `n & (n−1)`，其运算结果恰为把 n*n* 的二进制位中的最低位的 1 变为 0 之后的结果。
+
+- #### [67. 二进制求和](https://leetcode.cn/problems/add-binary/)
+
+  - 模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public String addBinary(String a, String b) {
+              int carryVal = 0;
+              int len = Math.max(a.length(),b.length());
+              String str = "";
+              int oneIndex = a.length()-1;
+              int twoIndex = b.length()-1;
+              while(oneIndex>=0&&twoIndex>=0){
+                  str=((a.charAt(oneIndex)-'0')^(b.charAt(twoIndex)-'0')^carryVal)+str;
+                  // System.out.println(str);
+                  if(a.charAt(oneIndex)-'0'+b.charAt(twoIndex)-'0'+carryVal>1){
+                      carryVal = 1;
+                  }else{
+                      carryVal = 0;
+                  }
+                  oneIndex--;
+                  twoIndex--;
+      
+              }
+              while(oneIndex>=0){
+                  str=((a.charAt(oneIndex)-'0')^carryVal)+str;
+                  if(a.charAt(oneIndex)-'0'+carryVal>1){
+                      carryVal = 1;
+                  }else{
+                      carryVal = 0;
+                  }
+                  oneIndex--;
+              }
+              while(twoIndex>=0){
+                  str=((b.charAt(twoIndex)-'0')^carryVal)+str;
+                  if(b.charAt(twoIndex)-'0'+carryVal>1){
+                      carryVal = 1;
+                  }else{
+                      carryVal = 0;
+                  }
+                  twoIndex--;
+              }
+              if(carryVal==1){
+                  str = carryVal+str;
+              }
+              return  str;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 数字转字符串
+      >
+      > - `String str = 123+"";`
+      >
+      > - `String str = String.valueOf(123);`
+      > - `String str = Integer.toString(123);`
+      >
+      > 字符串转数字
+      >
+      > - `int i = Integer.parseInt(str);`
+      >
+      > 数字转字符，用字符串做桥梁：
+      >
+      > `char a = str.charAt(i);`
