@@ -1282,3 +1282,66 @@
       > 数字转字符，用字符串做桥梁：
       >
       > `char a = str.charAt(i);`
+
+### 2022-6-9
+
+- #### [730. 统计不同回文子序列](https://leetcode.cn/problems/count-different-palindromic-subsequences/)
+
+  - 动态规划
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int countPalindromicSubsequences(String s) {
+              int mod = 1000000007;
+              int n = s.length();
+              int[][] dp = new int[n][n];
+              //一个单字符是一个回文子序列
+              for(int i=0;i<n;i++){
+                  dp[i][i] = 1;
+              }
+              //从长度为2的子串开始计算
+              for(int len = 2;len<=n;len++){
+                  //挨个计算长度为len的子串的回文子序列的个数
+                  for(int i=0;i+len<=n;i++){
+                      int j = i+len-1;
+                      //该串的左右边界值相同
+                      if(s.charAt(i)==s.charAt(j)){
+                          int left = i+1;
+                          int right = j-1;
+                          //找到第一个和s[i]相同的字符
+                          while(left<=right&&s.charAt(left)!=s.charAt(i)){
+                              left++;
+                          }
+                          //找到第一个和s[j]相同的字符
+                          while(left<=right&&s.charAt(right)!=s.charAt(j)){
+                              right--;
+                          }
+                          if(left>right){
+                              dp[i][j] = 2*dp[i+1][j-1]+2;
+                          }else if(left==right){
+                              dp[i][j] = 2*dp[i+1][j-1]+1;
+                          }else{
+                              dp[i][j] = 2*dp[i+1][j-1]-dp[left+1][right-1];
+                          }
+                      }else{
+                          //该串左右边界值不相同
+                          dp[i][j] = dp[i][j-1]+dp[i+1][j]-dp[i+1][j-1];
+                      }
+                      //处理超范围的结果
+                     //由于MOD的存在，可能出现在和前面计算出的dp[left + 1][right - 1]相减值为负，因此需要做个判断！
+                      dp[i][j] = (dp[i][j]>=0)?dp[i][j]%mod:dp[i][j]+mod;
+                  }
+                  return dp[0][n-1];
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 突破点：如果字符串是回文，那么左右边界值相同，去掉边界值后还是回文串。根据这个条件进行递推。
+
+      > [统计不同回文子序列【动态规划】🎉🎉🎉](https://leetcode.cn/problems/count-different-palindromic-subsequences/solution/tong-ji-butong-by-jiang-hui-4-q5xf/)
+
