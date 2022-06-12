@@ -1412,3 +1412,57 @@
       > 该递增序列的特点是：前面全是0，后面全是1
   
       > 如果把`i`当作最后一个`0`的坐标，那么前缀和在该处的值，就是前面`0`中有多少`1`需要反转。同理`n-i-(PreSum[n]-PreSum[i]))`是后面1中有多少0需要反转。在代码`10`行。
+
+### 2022-6-12
+
+- #### [890. 查找和替换模式](https://leetcode.cn/problems/find-and-replace-pattern/)
+
+  - hash表
+
+    - 代码
+
+      ```java
+      class Solution {
+          public List<String> findAndReplacePattern(String[] words, String pattern) {
+              List<String> ansList = new ArrayList();
+              for(String word : words){
+                  Map<String,String> Map01 = new HashMap();
+                  Map<String,String> Map02 = new HashMap();
+                  int n = word.length();
+                  if(n!=pattern.length()){
+                      break;
+                  }
+                  int flag = 1;
+                  for(int i=0;i<n;i++){
+                      String a = word.charAt(i)+"";
+                      String b = pattern.charAt(i)+"";
+                      if(!Map01.containsKey(a)){
+                          Map01.put(a,b);
+                      }else{
+                          if(!Map01.get(a).equals(b)){
+                              flag = 0;
+                              break;
+                          }
+                      }
+                      if(!Map02.containsKey(b)){
+                          Map02.put(b,a);
+                      }else{
+                          if(!Map02.get(b).equals(a)){
+                              flag = 0;
+                              break;
+                          }
+                      }
+                  }
+                  if(flag==1){
+                      ansList.add(word);
+                  }
+              }
+              return ansList;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 字母的排列是从字母到字母的双射所以要==双`hash`==
+
