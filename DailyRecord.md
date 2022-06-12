@@ -1279,6 +1279,12 @@
       > 数字转字符，用字符串做桥梁：
       >
       > `char a = str.charAt(i);`
+      >
+      > 字符转数字
+      >
+      > `char a = '2';`
+      >
+      > `int i = a-'0'`
 
 ### 2022-6-10
 
@@ -1377,4 +1383,32 @@
       > `0,1`代表双标志位状态转移
       
       > ![2022-6-11](F:\github远程仓库\leetcode\picture\2022-6-11.jpg)
-
+  
+  - 前缀和
+  
+    - 代码
+  
+      ```java
+      class Solution {
+          public int minFlipsMonoIncr(String s) {
+              int n = s.length();
+              int[] PreSum = new int[n+1];
+              for(int i=1;i<=n;i++){
+                  PreSum[i]=PreSum[i-1]+(s.charAt(i-1)-'0');
+              }
+              int ans = n;
+              for(int i=0;i<=n;i++){
+                  ans = Math.min(ans,PreSum[i]+n-i-(PreSum[n]-PreSum[i]));
+              }
+              return ans;
+          }
+      }
+      ```
+  
+    - 感悟与总结
+  
+      >递增序列想到前缀和
+  
+      > 该递增序列的特点是：前面全是0，后面全是1
+  
+      > 如果把`i`当作最后一个`0`的坐标，那么前缀和在该处的值，就是前面`0`中有多少`1`需要反转。同理`n-i-(PreSum[n]-PreSum[i]))`是后面1中有多少0需要反转。在代码`10`行。
