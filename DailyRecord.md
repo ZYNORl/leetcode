@@ -1382,7 +1382,7 @@
 
       > `0,1`代表双标志位状态转移
       
-      > ![2022-6-11](F:\github远程仓库\leetcode\picture\2022-6-11.jpg)
+      > ![2022-6-11](https://raw.githubusercontent.com/ZYNORl/leetcode/main/picture/2022-6-11.jpg)
   
   - 前缀和
   
