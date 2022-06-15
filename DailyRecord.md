@@ -1466,3 +1466,135 @@
 
       > 字母的排列是从字母到字母的双射所以要==双`hash`==
 
+### 2022-6-13
+
+- #### [1051. 高度检查器](https://leetcode.cn/problems/height-checker/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int heightChecker(int[] heights) {
+              int ans = 0;
+              int n = heights.length;
+              int[] expected = new int[n];
+              for(int i=0;i<n;i++){
+                  expected[i] = heights[i];
+              }
+              Arrays.sort(expected);
+              for(int i=0;i<n;i++){
+                  if(heights[i]!=expected[i]){
+                      ans++;
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 无
+
+### 2022-6-14
+
+- #### [498. 对角线遍历](https://leetcode.cn/problems/diagonal-traverse/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int[] findDiagonalOrder(int[][] mat) {
+             // [-1,1]  [1,-1]
+             int[][] drection = {{-1,1},{1,-1}};
+             int m = mat.length;
+             int n = mat[0].length;
+             int size = m*n;
+             int [] res = new int[size];
+             int i=0,j=0;
+             int index = 0;
+             int ori = 0;
+             while(i!=m&&j!=n){
+              //    System.out.println(i+"---"+j);
+                 res[index] = mat[i][j];
+                 index++;
+                 if(ori==0){
+                     if(j==n-1){
+                         i++;
+                         ori = 1;
+                     }else if(i==0){
+                         j++;
+                         ori = 1;
+                     }else{
+                         i+=drection[ori][0];
+                         j+=drection[ori][1];
+                     }
+                 }else{
+                     if(i==m-1){
+                         j++;
+                         ori = 0;
+                     }else if(j==0){
+                         i++;
+                         ori = 0;
+                     }else{
+                         i+=drection[ori][0];
+                         j+=drection[ori][1];
+                     }
+                 }
+      
+             }
+             return res;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 无
+
+### 2022-6-15
+
+- #### [719. 找出第 K 小的数对距离](https://leetcode.cn/problems/find-k-th-smallest-pair-distance/)
+
+  - 排序+二分法+双指针
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int smallestDistancePair(int[] nums, int k) {
+              Arrays.sort(nums);
+              int n = nums.length;
+              int left = 0;
+              int right = nums[n-1]-nums[0];
+              while(left<=right){
+                  int mid = (left+right)>>1; //mid表示距离
+                  int cnt = 0;
+                  for(int i=0,j=0;j<n;j++){
+                      while(nums[j]-nums[i]>mid){
+                          i++;
+                      }
+                      cnt+=j-i;
+                  }
+                  if(cnt>=k){
+                      right = mid-1;
+                  }else{
+                      left = mid+1;
+                  }
+              }
+              return left;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 数对是两数的绝对值，所以排序对结果无影响
+
+      > 像这种题，观察数据量级很重要。一看n=10^4，O(n2)基本是超时的，O(n)又不太现实，所以想到O(nlogn)，自然就知道用二分了
+
+      > 在排序的基础上进行二分，对于每次二分的`mid`,进行双指针。

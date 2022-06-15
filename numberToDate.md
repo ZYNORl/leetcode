@@ -9,6 +9,7 @@
 | [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/) | 2022-6-3  |
 | [638. 大礼包](https://leetcode.cn/problems/shopping-offers/) | 2022-6-4  |
 | [698. 划分为k个相等的子集](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/) | 2022-6-7  |
+| [719. 找出第 K 小的数对距离](https://leetcode.cn/problems/find-k-th-smallest-pair-distance/) | 2022-6-15 |
 | [729. 我的日程安排表 I](https://leetcode.cn/problems/my-calendar-i/) | 2022-6-6  |
 | [730. 统计不同回文子序列](https://leetcode.cn/problems/count-different-palindromic-subsequences/) | 2022-6-10 |
 | [731. 我的日程安排表 II](https://leetcode.cn/problems/my-calendar-ii/) | 2022-6-6  |
