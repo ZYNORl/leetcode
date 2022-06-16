@@ -7,6 +7,7 @@
 | [478. 在圆内随机生成点](https://leetcode.cn/problems/generate-random-point-in-a-circle/) | 2022-6-5  |
 | [497. 非重叠矩形中的随机点](https://leetcode.cn/problems/random-point-in-non-overlapping-rectangles/) | 2022-6-9  |
 | [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/) | 2022-6-3  |
+| [532. 数组中的 k-diff 数对](https://leetcode.cn/problems/k-diff-pairs-in-an-array/) | 2022-6-16 |
 | [638. 大礼包](https://leetcode.cn/problems/shopping-offers/) | 2022-6-4  |
 | [698. 划分为k个相等的子集](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/) | 2022-6-7  |
 | [719. 找出第 K 小的数对距离](https://leetcode.cn/problems/find-k-th-smallest-pair-distance/) | 2022-6-15 |

@@ -1598,3 +1598,50 @@
       > 像这种题，观察数据量级很重要。一看n=10^4，O(n2)基本是超时的，O(n)又不太现实，所以想到O(nlogn)，自然就知道用二分了
 
       > 在排序的基础上进行二分，对于每次二分的`mid`,进行双指针。
+
+### 2022-6-16
+
+- #### [532. 数组中的 k-diff 数对](https://leetcode.cn/problems/k-diff-pairs-in-an-array/)
+
+  - 排序+双指针
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int findPairs(int[] nums, int k) {
+              int ans = 0;
+              Arrays.sort(nums);
+              int first_index = -1;
+              int second_index = -1;
+              for(int i=0,j=1;j<nums.length;j++){
+                  if(first_index!=-1&&second_index!=-1&&nums[i]==nums[first_index]&&nums[j]==nums[second_index]){
+                      while(i>0&&nums[i]==nums[i-1]){
+                          i++;
+                      }
+                      while(nums[j]==nums[j-1]){
+                          j++;
+                          if(j>=nums.length){
+                              return ans;
+                          }
+                      }
+                  }
+                  while(nums[j]-nums[i]>k){
+                      i++;
+                  }
+                  if(i!=j&&nums[j]-nums[i]==k){
+                      ans++;
+                      first_index = i;
+                      second_index = j;
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > - 因为求满足k的数对是绝对值且数量级为10^4，所以可以通过排序进行预处理(O(nlgn))
+      > - 在排序的基础上，边去重（相同值）边进行双指针（在排好序的基础上进行求差,i和j都不需要回溯,O(n)）
+
