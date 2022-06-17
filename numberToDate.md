@@ -22,7 +22,7 @@
 | [929. 独特的电子邮件地址](https://leetcode.cn/problems/unique-email-addresses/) | 2022-6-4  |
 |                                                              |           |
 | [1037. 有效的回旋镖](https://leetcode.cn/problems/valid-boomerang/) | 2022-6-8  |
-|                                                              |           |
+| [1089. 复写零](https://leetcode.cn/problems/duplicate-zeros/) | 2022-6-17 |
 |                                                              |           |
 |                                                              |           |
 |                                                              |           |

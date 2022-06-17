@@ -1645,3 +1645,36 @@
       > - 因为求满足k的数对是绝对值且数量级为10^4，所以可以通过排序进行预处理(O(nlgn))
       > - 在排序的基础上，边去重（相同值）边进行双指针（在排好序的基础上进行求差,i和j都不需要回溯,O(n)）
 
+### 2022-6-17
+
+- #### [1089. 复写零](https://leetcode.cn/problems/duplicate-zeros/)
+
+  - 反向遍历+模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public void duplicateZeros(int[] arr) {
+              int n = arr.length;
+              for(int i=n-1;i>=0;i--){
+                  int count = 0;
+                  for(int j=0;j<i;j++){
+                      if(arr[j]==0){
+                          count++;
+                      }
+                  }
+                  if(count+i<n){
+                      arr[count+i] = arr[i];
+                      if(count+i+1<n&&arr[i]==0){
+                          arr[count+i+1] = 0;
+                      }
+                  }
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 从后往前遍历，统计其前面0的个数进行后移。
