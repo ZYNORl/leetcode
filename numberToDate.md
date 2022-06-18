@@ -1,5 +1,6 @@
 |                           题目编号                           | 刷题日期  |
 | :----------------------------------------------------------: | :-------: |
+| [剑指 Offer II 029. 排序的循环链表](https://leetcode.cn/problems/4ueAj6/) | 2022-6-18 |
 |  [67. 二进制求和](https://leetcode.cn/problems/add-binary/)  | 2022-6-9  |
 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/) | 2022-6-8  |
 | [450. 删除二叉搜索树中的节点](https://leetcode.cn/problems/delete-node-in-a-bst/) | 2022-6-2  |

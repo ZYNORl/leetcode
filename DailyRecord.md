@@ -1678,3 +1678,64 @@
     - 感悟与总结
 
       > 从后往前遍历，统计其前面0的个数进行后移。
+
+### 2022-6-18
+
+- #### [剑指 Offer II 029. 排序的循环链表](https://leetcode.cn/problems/4ueAj6/)
+
+  - 链表模拟
+
+    - 代码
+
+      ```java
+      /*
+      // Definition for a Node.
+      class Node {
+          public int val;
+          public Node next;
+      
+          public Node() {}
+      
+          public Node(int _val) {
+              val = _val;
+          }
+      
+          public Node(int _val, Node _next) {
+              val = _val;
+              next = _next;
+          }
+      };
+      */
+      
+      class Solution {
+          public Node insert(Node head, int insertVal) {
+              if(head==null){
+                  head = new Node(insertVal);
+                  head.next = head;
+                  return head;
+              }
+              Node p = head.next;
+              Node pre_p = head;
+              while(p!=head){
+                  if(pre_p.val == insertVal || (pre_p.val<=insertVal && p.val>=insertVal) || (pre_p.val>p.val && pre_p.val>=insertVal && p.val>=insertVal) || (pre_p.val>p.val && pre_p.val<=insertVal && p.val<=insertVal)){
+                      Node node =  new Node(insertVal);
+                      node.next = p;
+                      pre_p.next = node;
+                      return head;
+                  }
+                  pre_p = p;
+                  p = p.next;
+              }
+              if(p==head){
+                  Node node =  new Node(insertVal);
+                  node.next = p;
+                  pre_p.next = node;
+              }
+              return head;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 无
