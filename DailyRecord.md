@@ -1739,3 +1739,64 @@
     - 感悟与总结
 
       > 无
+
+### 2022-6-19
+
+- #### [508. 出现次数最多的子树元素和](https://leetcode.cn/problems/most-frequent-subtree-sum/)
+
+  - DFS
+
+    - 代码
+
+      ```java
+      /**
+       * Definition for a binary tree node.
+       * public class TreeNode {
+       *     int val;
+       *     TreeNode left;
+       *     TreeNode right;
+       *     TreeNode() {}
+       *     TreeNode(int val) { this.val = val; }
+       *     TreeNode(int val, TreeNode left, TreeNode right) {
+       *         this.val = val;
+       *         this.left = left;
+       *         this.right = right;
+       *     }
+       * }
+       */
+      class Solution {
+          Map<Integer,Integer> Mymap = new HashMap<Integer,Integer>();
+          int max_count = 0;
+          public int[] findFrequentTreeSum(TreeNode root) {
+              List<Integer> list = new ArrayList<Integer>();
+              DFS(root);
+              for(int key : Mymap.keySet()){
+                  if(Mymap.get(key)==max_count){
+                      list.add(key);
+                  }
+              }
+              int[] res = new int[list.size()];
+              for(int i=0;i<list.size();i++){
+                  res[i] = list.get(i);
+              }
+              return res;
+          }
+          public int DFS(TreeNode root){
+              if(root==null){
+                  return 0;
+              }
+              int total_val = total_val = root.val + DFS(root.left) + DFS(root.right);
+              Mymap.put(total_val, Mymap.getOrDefault(total_val,0)+1);
+              max_count = Math.max(max_count,Mymap.get(total_val));
+              return total_val;
+          }
+      }
+      ```
+
+    - 感悟与总结·
+
+    > `Integer`和`int`是相互自动装箱的
+
+    > `Map<Integer,Integer> Mymap = new HashMap<Integer,Integer>();`, 前面的泛型也要写上，不然调用其方法时需要强转。
+
+    > 二叉树的深度优先递归，是将这层的任务推迟给下一层。
