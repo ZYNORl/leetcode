@@ -1,0 +1,1 @@
+#### [715. Range 模块](https://leetcode.cn/problems/range-module/)	2022-6-20

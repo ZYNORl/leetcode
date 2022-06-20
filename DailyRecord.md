@@ -1800,3 +1800,254 @@
     > `Map<Integer,Integer> Mymap = new HashMap<Integer,Integer>();`, 前面的泛型也要写上，不然调用其方法时需要强转。
 
     > 二叉树的深度优先递归，是将这层的任务推迟给下一层。
+
+### 2022-6-20
+
+- #### [715. Range 模块](https://leetcode.cn/problems/range-module/)
+
+  - 有序集合（TreeMap）
+
+    - 代码
+
+      ```java
+      class RangeModule {
+          TreeMap<Integer,Integer> intervals;
+          public RangeModule() {
+              intervals = new TreeMap<Integer,Integer>();
+          }
+          
+          public void addRange(int left, int right) {
+              Map.Entry<Integer,Integer> entry = intervals.higherEntry(left);
+              if(entry != intervals.firstEntry()){
+                  Map.Entry<Integer,Integer> start = entry != null ? intervals.lowerEntry(entry.getKey()) : intervals.lastEntry();
+                  if(start != null && start.getValue() >= right){
+                      return;
+                  }
+                  if(start != null && start.getValue() >= left){
+                      left = start.getKey();
+                      intervals.remove(start.getKey());
+                  }
+              }
+              while(entry != null && entry.getKey() <= right){
+                  right = Math.max(right,entry.getValue());
+                  intervals.remove(entry.getKey());
+                  entry = intervals.higherEntry(entry.getKey());
+              }
+              intervals.put(left,right);
+          }
+          
+          public boolean queryRange(int left, int right) {
+              Map.Entry<Integer,Integer> entry = intervals.higherEntry(left);
+              if(entry == intervals.firstEntry()){
+                  return false;
+              }
+              entry = entry != null ? intervals.lowerEntry(entry.getKey()) : intervals.lastEntry();
+              return entry != null && right <= entry.getValue();
+          }
+          
+          public void removeRange(int left, int right) {
+              Map.Entry<Integer,Integer> entry = intervals.higherEntry(left);
+              if(entry != intervals.firstEntry()){
+                  Map.Entry<Integer,Integer> start = entry != null ? intervals.lowerEntry(entry.getKey()) : intervals.lastEntry();
+                  if(start != null && start.getValue() >= right){
+                      if(start.getKey() == left){
+                          intervals.remove(start.getKey());
+                      }else{
+                          intervals.put(start.getKey(),left);
+                      }
+                      if(right != start.getValue()){
+                          intervals.put(right,start.getValue());
+                      }
+                      return;
+                  }else if(start != null && start.getValue()>left){
+                      // intervals.remove(start.getKey());  其实这里本应该有此语句，但是因为和下面put的key相同，把它替换掉了。
+                      intervals.put(start.getKey(),left);
+                  }
+                  while(entry != null && entry.getKey()<right){
+                      if(entry.getValue()<=right){
+                          intervals.remove(entry.getKey());
+                          entry = intervals.higherEntry(entry.getKey());
+                      }else{
+                          intervals.put(right,entry.getValue());
+                          intervals.remove(entry.getKey());
+                          break;
+                      }
+                  }
+      
+              }
+      
+          }
+      }
+      
+      /**
+       * Your RangeModule object will be instantiated and called as such:
+       * RangeModule obj = new RangeModule();
+       * obj.addRange(left,right);
+       * boolean param_2 = obj.queryRange(left,right);
+       * obj.removeRange(left,right);
+   */
+      ```
+
+    - 感悟与总结
+    
+      > `TreeMap`中的`key`默认是按递增进行排序的，且其方法`intervals.higherEntry(k);和intervals.lowerEntry(k);`是二分查找，分别查找大于
+      >
+  > - `an entry with the least key greater than key, or null if there is no such key`
+      > - `an entry with the greatest key less than key, or null if there is no such key`
+
+      > map中的实体可以这样声明： ` Map.Entry<Integer,Integer> entry` 
+    
+      > 根据题意，所有区间是不重叠的，这就说明，所有端点有序。
+
+- #### [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)
+
+  - 回溯法
+
+    - 代码
+
+      ```java
+      class Solution {
+          int ans = 1;
+          public int lengthOfLIS(int[] nums) {
+              recall(nums,0,-10001,0);
+              return ans;
+          }
+          void recall(int[] nums,int index,int lastVal,int count){
+              ans = Math.max(count,ans);
+              if(index>=nums.length){
+                  return;
+              }
+              if(nums[index]>lastVal){
+                  int newLastVal = nums[index];
+                  index++;
+                  count++;
+                  recall(nums,index,newLastVal,count);
+                  index--;
+                  count--;
+                  //
+                  index++;
+                  recall(nums,index,lastVal,count);
+                  index--;
+              }else{
+                  index++;
+                  recall(nums,index,lastVal,count);
+                  index--; 
+              }
+          }
+      }
+      ```
+
+  - 动态规划
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int lengthOfLIS(int[] nums) {
+              int ans = 1;
+              int n = nums.length;
+              int[] dp = new int[n];
+              dp[0] = 1;
+              for(int i=1;i<n;i++){
+                  dp[i] = 1;
+                  for(int j=0;j<i;j++){
+                      if(nums[i]>nums[j]){
+                          dp[i] = Math.max(dp[j]+1,dp[i]);
+                      }
+                  }
+                  ans = Math.max(ans,dp[i]);
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 该节点必须选取时的时候的最长序列长度作为`dp[i]`
+
+      > 由于递增的要求，如果该节点大于在其任一前面节点则在前面节点长度上+1的基础上有了状态转移。
+
+  - 二分法+贪心
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int lengthOfLIS(int[] nums) {
+              int len = 1;
+              int n = nums.length;
+              int[] d = new int[n+1];
+              d[len] = nums[0];
+              for(int i=1;i<n;i++){
+                  if(nums[i]>d[len]){
+                      d[++len] = nums[i];
+                  }else{
+                      int l = 1;
+                      int r = len;
+                      int pos = 0;
+                      while(l<=r){
+                          int mid = (l+r)>>1;
+                          if(d[mid]<nums[i]){
+                              pos = mid;
+                              l = mid+1;
+                          }else{
+                              r = mid-1;
+                          }
+                      }
+                      d[pos+1] = nums[i];
+                  }
+              }
+              return len;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 维护一个递增数组，每次在长度相同的条件下都选择值小的那个元素，以便后面元素递增添加后实现更大的长度。
+
+- #### [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/)
+
+  - 动态规划
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int findNumberOfLIS(int[] nums) {
+              int maxLen = 1;
+              int ans = 1;
+              int n = nums.length;
+              int[] dp = new int[n];  //选取该节点时的最长序列长度
+              int[] Maxnum = new int[n]; //选取该节点时的最长序列长度所对应的个数
+              Maxnum[0] = 1;
+              dp[0] = 1;
+              for(int i=1;i<n;i++){
+                  dp[i] = 1;
+                  Maxnum[i] = 1;
+                  for(int j=0;j<i;j++){
+                      if(nums[i]>nums[j]){
+                          if(dp[j]+1>dp[i]){
+                              dp[i] = dp[j]+1;
+                              Maxnum[i] = Maxnum[j];
+                          }else if(dp[i]==dp[j]+1){
+                              Maxnum[i] += Maxnum[j];
+                          }
+                      }
+                  }
+                  if(dp[i]>maxLen){
+                      maxLen = dp[i];
+                      ans = Maxnum[i];
+                  }else if(dp[i]==maxLen){
+                      ans += Maxnum[i];
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 在前面一道题的基础上，新增`int[] Maxnum`状态转移，表示`dp[i]`该节点最长的长度下，所对应的个数。
