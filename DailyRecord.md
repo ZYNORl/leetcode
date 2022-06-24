@@ -1896,7 +1896,7 @@
       > - `an entry with the greatest key less than key, or null if there is no such key`
 
       > map中的实体可以这样声明： ` Map.Entry<Integer,Integer> entry` 
-    
+        
       > 根据题意，所有区间是不重叠的，这就说明，所有端点有序。
 
 - #### [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)
@@ -2051,3 +2051,159 @@
     - 感悟与总结
 
       > 在前面一道题的基础上，新增`int[] Maxnum`状态转移，表示`dp[i]`该节点最长的长度下，所对应的个数。
+
+### 2022-6-21
+
+- #### [1108. IP 地址无效化](https://leetcode.cn/problems/defanging-an-ip-address/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public String defangIPaddr(String address) {
+              String res = "";
+              int n = address.length();
+              for(int i=0;i<n;i++){
+                  char c = address.charAt(i);
+                  if(c != '.'){
+                      res += c;
+                  }else{
+                      res +="[.]";
+                  }
+              }
+              return res;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 无
+
+### 2022-6-22
+
+- #### [513. 找树左下角的值](https://leetcode.cn/problems/find-bottom-left-tree-value/)
+
+  - DFS
+
+    - 代码
+
+      ```java
+      /**
+       * Definition for a binary tree node.
+       * public class TreeNode {
+       *     int val;
+       *     TreeNode left;
+       *     TreeNode right;
+       *     TreeNode() {}
+       *     TreeNode(int val) { this.val = val; }
+       *     TreeNode(int val, TreeNode left, TreeNode right) {
+       *         this.val = val;
+       *         this.left = left;
+       *         this.right = right;
+       *     }
+       * }
+       */
+      class Solution {
+          int max_h = 0;
+          int ans;
+          public int findBottomLeftValue(TreeNode root) {
+              BFS(root,1);
+              return ans;
+          }
+          void BFS(TreeNode root,int h){
+              if(root.left==null && root.right==null){
+                  if(h>max_h){
+                      ans = root.val;
+                  }
+                  return;
+              }
+              if(root.left!=null){
+                  if(h+1>max_h){
+                      max_h = h+1;
+                      ans = root.left.val;
+                  }
+                  BFS(root.left,h+1);
+              }
+              if(root.right!=null){
+                  BFS(root.right,h+1);
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 深度优先遍历、记录深度、在深度相同的情况下优先选择左边。
+
+### 2022-6-23
+
+### 2022-6-24
+
+- #### [515. 在每个树行中找最大值](https://leetcode.cn/problems/find-largest-value-in-each-tree-row/)
+
+  - 代码
+
+    ```java
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     *     int val;
+     *     TreeNode left;
+     *     TreeNode right;
+     *     TreeNode() {}
+     *     TreeNode(int val) { this.val = val; }
+     *     TreeNode(int val, TreeNode left, TreeNode right) {
+     *         this.val = val;
+     *         this.left = left;
+     *         this.right = right;
+     *     }
+     * }
+     */
+    class Solution {
+        public List<Integer> largestValues(TreeNode root) {
+            if(root == null){
+                return new ArrayList<Integer>();
+            }
+            int min = Integer.MIN_VALUE;
+            List<Integer> res = new ArrayList<Integer>();
+            Queue<TreeNode> q = new LinkedList<TreeNode>();
+            Queue<TreeNode> Q = new LinkedList<TreeNode>();
+            q.add(root);
+            res.add(root.val);
+            int minVal = min;
+            while(!q.isEmpty()){
+                TreeNode node = q.remove();
+                if(node.left!=null){
+                    if(node.left.val>minVal){
+                        minVal = node.left.val;
+                    }
+                    Q.add(node.left);
+                }
+                if(node.right!=null){
+                    if(node.right.val>minVal){
+                        minVal = node.right.val;
+                    }
+                    Q.add(node.right);
+                }
+                if(q.isEmpty()){
+                    while(!Q.isEmpty()){
+                        q.add(Q.remove());
+                    }
+                    res.add(minVal);
+                    minVal = min;
+                }
+            }
+    
+            return res.subList(0,res.size()-1);
+        }
+    }
+    ```
+
+  - 感悟与总结
+
+    > 用额外的队列存储每一层的节点，将原本每个节点为单位的层次遍历改为以该层为单位的层次遍历，这样就可以确定每层的节点有哪些。
+
+    > `Integer.MIN_VALUE`和`Integer.MAX_VALUE`

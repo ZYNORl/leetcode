@@ -9,6 +9,8 @@
 | [478. 在圆内随机生成点](https://leetcode.cn/problems/generate-random-point-in-a-circle/) | 2022-6-5  |
 | [497. 非重叠矩形中的随机点](https://leetcode.cn/problems/random-point-in-non-overlapping-rectangles/) | 2022-6-9  |
 | [508. 出现次数最多的子树元素和](https://leetcode.cn/problems/most-frequent-subtree-sum/) | 2022-6-19 |
+| [513. 找树左下角的值](https://leetcode.cn/problems/find-bottom-left-tree-value/) | 2022-6-22 |
+| [515. 在每个树行中找最大值](https://leetcode.cn/problems/find-largest-value-in-each-tree-row/) | 2022-6-24 |
 | [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/) | 2022-6-3  |
 | [532. 数组中的 k-diff 数对](https://leetcode.cn/problems/k-diff-pairs-in-an-array/) | 2022-6-16 |
 | [638. 大礼包](https://leetcode.cn/problems/shopping-offers/) | 2022-6-4  |
@@ -25,7 +27,7 @@
 | [890. 查找和替换模式](https://leetcode.cn/problems/find-and-replace-pattern/) | 2022-6-12 |
 | [926. 将字符串翻转到单调递增](https://leetcode.cn/problems/flip-string-to-monotone-increasing/) | 2022-6-11 |
 | [929. 独特的电子邮件地址](https://leetcode.cn/problems/unique-email-addresses/) | 2022-6-4  |
-|                                                              |           |
+| [1108. IP 地址无效化](https://leetcode.cn/problems/defanging-an-ip-address/) | 2022-6-21 |
 | [1037. 有效的回旋镖](https://leetcode.cn/problems/valid-boomerang/) | 2022-6-8  |
 | [1089. 复写零](https://leetcode.cn/problems/duplicate-zeros/) | 2022-6-17 |
 |                                                              |           |
