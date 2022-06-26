@@ -7,3 +7,5 @@
 #### [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)	2022-6-20
 
 #### [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/)	2022-6-20
+
+#### [剑指 Offer II 091. 粉刷房子](https://leetcode.cn/problems/JEj789/)	2022-6-25

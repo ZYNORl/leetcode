@@ -2207,3 +2207,96 @@
     > 用额外的队列存储每一层的节点，将原本每个节点为单位的层次遍历改为以该层为单位的层次遍历，这样就可以确定每层的节点有哪些。
 
     > `Integer.MIN_VALUE`和`Integer.MAX_VALUE`
+
+### 2022-6-25
+
+- [剑指 Offer II 091. 粉刷房子](https://leetcode.cn/problems/JEj789/)
+
+  - 代码
+
+    ```java
+    class Solution {
+        public int minCost(int[][] costs) {
+            int ans = Integer.MAX_VALUE;
+            int m = costs.length;
+            int[][] dp = new int[m][3];
+            dp[0][0] = costs[0][0];
+            dp[0][1] = costs[0][1];
+            dp[0][2] = costs[0][2];
+            for(int i=1;i<m;i++){
+                for(int j = 0;j<3;j++){
+                    if(j==0){
+                        dp[i][0] = Math.min(dp[i-1][1],dp[i-1][2])+costs[i][j];
+                    }else if(j==1){
+                        dp[i][1] = Math.min(dp[i-1][0],dp[i-1][2])+costs[i][j];
+                    }else{
+                        dp[i][2] = Math.min(dp[i-1][0],dp[i-1][1])+costs[i][j];
+                    }
+                }
+            }
+            for(int j=0;j<3;j++){
+                ans = Math.min(ans,dp[m-1][j]);
+            }
+            return ans;   
+        }
+    }
+    ```
+
+  - 感悟与总结
+
+    > 经典二维动态规划题
+
+### 2022-6-26
+
+- #### [710. 黑名单中的随机数](https://leetcode.cn/problems/random-pick-with-blacklist/)
+
+  - 代码
+
+    ```java
+    class Solution {
+        Map<Integer,Integer> b2w;
+        Random random;
+        int bound;
+        public Solution(int n, int[] blacklist) {
+            b2w = new HashMap<Integer,Integer>(); // 进行白色区间中黑色到黑色区间中白的的映射
+            random = new Random();
+            int m = blacklist.length; // 黑色区间大小
+            bound = n-m; // 白色区间大小
+            Set<Integer> black = new HashSet<Integer>(); // 黑色区间中的黑色集合
+            for(int b:blacklist){
+                if(b>=bound){
+                    black.add(b);
+                }
+            }
+            int w  = bound;
+            for(int b:blacklist){ 
+                if(b<bound){
+                    while(black.contains(w)){
+                        ++w;
+                    }
+                    b2w.put(b,w);
+                    ++w;
+                }
+            }
+        }
+        
+        public int pick() {
+            int x=  random.nextInt(bound);
+            return b2w.getOrDefault(x,x);
+        }
+    }
+    
+    /**
+     * Your Solution object will be instantiated and called as such:
+     * Solution obj = new Solution(n, blacklist);
+     * int param_1 = obj.pick();
+     */
+    ```
+
+  - 感悟与总结
+
+    > 这个题的映射法还是比较巧妙的，值得学习，几个月前打过卡的519题是类似题目（那个涉及二维坐标，相对更复杂）
+
+    > 根据`blacklist`的长度m划分区域，白色区间为n-m，黑色区间为m。且白色的区间里面的黑色元素和黑色区间里面的白的元素是相同的。
+    >
+    > 预处理：将白色区间里面的黑色元素一一映射到黑色区间里面的白色元素。这样只需要对白色区间进行随机。

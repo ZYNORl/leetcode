@@ -3,6 +3,7 @@
 | [剑指 Offer II 029. 排序的循环链表](https://leetcode.cn/problems/4ueAj6/) | 2022-6-18 |
 |  [67. 二进制求和](https://leetcode.cn/problems/add-binary/)  | 2022-6-9  |
 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/) | 2022-6-8  |
+| [256. 剑指 Offer II 091. 粉刷房子](https://leetcode.cn/problems/JEj789/) | 2022-6-25 |
 | [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/) | 2022-6-20 |
 | [450. 删除二叉搜索树中的节点](https://leetcode.cn/problems/delete-node-in-a-bst/) | 2022-6-2  |
 | [473. 火柴拼正方形](https://leetcode.cn/problems/matchsticks-to-square/) | 2022-6-1  |
@@ -16,6 +17,7 @@
 | [638. 大礼包](https://leetcode.cn/problems/shopping-offers/) | 2022-6-4  |
 | [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/) | 2022-6-20 |
 | [698. 划分为k个相等的子集](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/) | 2022-6-7  |
+| [710. 黑名单中的随机数](https://leetcode.cn/problems/random-pick-with-blacklist/) | 2022-6-26 |
 | [715. Range 模块](https://leetcode.cn/problems/range-module/) | 2022-6-20 |
 | [719. 找出第 K 小的数对距离](https://leetcode.cn/problems/find-k-th-smallest-pair-distance/) | 2022-6-15 |
 | [729. 我的日程安排表 I](https://leetcode.cn/problems/my-calendar-i/) | 2022-6-6  |
