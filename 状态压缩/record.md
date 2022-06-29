@@ -3,3 +3,5 @@
 #### [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/)  2022-6-3
 
 #### [698. 划分为k个相等的子集](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/)	2022-6-7
+
+#### [522. 最长特殊序列 II](https://leetcode.cn/problems/longest-uncommon-subsequence-ii/)	2022-6-19

@@ -2300,3 +2300,49 @@
     > 根据`blacklist`的长度m划分区域，白色区间为n-m，黑色区间为m。且白色的区间里面的黑色元素和黑色区间里面的白的元素是相同的。
     >
     > 预处理：将白色区间里面的黑色元素一一映射到黑色区间里面的白色元素。这样只需要对白色区间进行随机。
+
+### 2022-6-29
+
+- #### [522. 最长特殊序列 II](https://leetcode.cn/problems/longest-uncommon-subsequence-ii/)
+
+  - 状态压缩+hashMap
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int findLUSlength(String[] strs) {
+              int ans = -1;
+              Map<String,Integer> myMap = new HashMap<String,Integer>();
+              for(String str : strs){
+                  int len = str.length();
+                  int size = 1<<len;
+                  for(int i=1;i<size;i++){
+                      String temp = "";
+                      for(int j=0;j<len;j++){
+                          if((i&(1<<j))!=0){
+                              temp += str.charAt(j);
+                          }
+                      }
+                      if(myMap.getOrDefault(temp,0)==0){
+                          myMap.put(temp,1);
+                      }else{
+                          myMap.put(temp,-1);
+                      }
+                  }
+              }
+              Set<String> mySet = new HashSet<String>();
+              mySet = myMap.keySet();
+              for(String str : mySet){
+                  if(myMap.getOrDefault(str,0)==1&&str.length()>ans){
+                      ans = str.length();
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 2^n个状态，每个状态可以表示一个子序列
