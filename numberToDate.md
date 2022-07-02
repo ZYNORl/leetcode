@@ -3,6 +3,7 @@
 | [剑指 Offer II 029. 排序的循环链表](https://leetcode.cn/problems/4ueAj6/) | 2022-6-18 |
 |  [67. 二进制求和](https://leetcode.cn/problems/add-binary/)  | 2022-6-9  |
 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/) | 2022-6-8  |
+| [241. 为运算表达式设计优先级](https://leetcode.cn/problems/different-ways-to-add-parentheses/) | 2022-7-1  |
 | [256. 剑指 Offer II 091. 粉刷房子](https://leetcode.cn/problems/JEj789/) | 2022-6-25 |
 | [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/) | 2022-6-20 |
 | [450. 删除二叉搜索树中的节点](https://leetcode.cn/problems/delete-node-in-a-bst/) | 2022-6-2  |
@@ -33,7 +34,7 @@
 | [1108. IP 地址无效化](https://leetcode.cn/problems/defanging-an-ip-address/) | 2022-6-21 |
 | [1037. 有效的回旋镖](https://leetcode.cn/problems/valid-boomerang/) | 2022-6-8  |
 | [1089. 复写零](https://leetcode.cn/problems/duplicate-zeros/) | 2022-6-17 |
-|                                                              |           |
+| [1175. 质数排列](https://leetcode.cn/problems/prime-arrangements/) | 2022-6-30 |
 |                                                              |           |
 |                                                              |           |
 |                                                              |           |

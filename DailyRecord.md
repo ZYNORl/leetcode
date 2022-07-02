@@ -2301,6 +2301,37 @@
     >
     > 预处理：将白色区间里面的黑色元素一一映射到黑色区间里面的白色元素。这样只需要对白色区间进行随机。
 
+### 2022-6-28
+
+- #### [324. 摆动排序 II](https://leetcode.cn/problems/wiggle-sort-ii/)
+
+  - 排序
+
+    - 代码
+
+      ```java
+      class Solution {
+          public void wiggleSort(int[] nums) {
+              int[] arr = nums.clone();
+              Arrays.sort(arr);
+              int n = nums.length;
+              int x = (n+1)/2;
+              for(int i=0,j=x-1,k=n-1;i<n;i+=2,j--,k--){
+                  nums[i] = arr[j];
+                  if(i+1<n){
+                      nums[i+1] = arr[k];
+                  }
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 由于题目已经假设所有输入数组都可以得到满足题目要求的结果。
+      >
+      > 所以，`nums`中相同元素的个数不会超过`(n+1)/2`,所以右队列的最大值大于左队列的最大值，且就更大于左队列的次大值。
+
 ### 2022-6-29
 
 - #### [522. 最长特殊序列 II](https://leetcode.cn/problems/longest-uncommon-subsequence-ii/)
@@ -2346,3 +2377,236 @@
     - 感悟与总结
 
       > 2^n个状态，每个状态可以表示一个子序列
+
+### 2022-6-30
+
+- #### [1175. 质数排列](https://leetcode.cn/problems/prime-arrangements/)
+
+  - 素数判断+n!
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int numPrimeArrangements(int n) {
+              long ans = 1;
+              int size = 0;
+              for(int i=2;i<=n;i++){
+                  int flag = 0;
+                  for(int j=2;j*j<=i;j++){
+                      if(i%j==0){
+                          flag = 1;
+                      }
+                  }
+                  if(flag==0){
+                      size++;
+                  }
+              }
+              int size01 = n-size;
+              while(size>1){
+                  ans*=size;
+                  ans = ans%1000000007;
+                  size--;
+              }
+              while(size01>1){
+                  ans*=size01;
+                  ans = ans%1000000007;
+                  size01--;
+              }
+              return (int)ans%1000000007;
+      
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 2也是素数
+
+### 2022-7-1
+
+- #### [241. 为运算表达式设计优先级](https://leetcode.cn/problems/different-ways-to-add-parentheses/)
+
+  - 递归+回溯 （❌）
+
+    - 代码
+
+      ```java
+      class Solution {
+          static final int ADDITION = -1;
+          static final int SUBTRACTION = -2;
+          static final int MULTIPLICATION = -3;
+          public List<Integer> diffWaysToCompute(String expression) {
+              List<Integer> ops = new ArrayList<Integer>();
+              for(int i=0;i<expression.length();){
+                  if(!Character.isDigit(expression.charAt(i))){
+                      if(expression.charAt(i)=='+'){
+                          ops.add(ADDITION);
+                      }else if(expression.charAt(i)=='-'){
+                          ops.add(SUBTRACTION);
+                      }else{
+                          ops.add(MULTIPLICATION);
+                      }
+                      i++;
+                  }else{
+                      int v = 0;
+                      while(i<expression.length()&&Character.isDigit(expression.charAt(i))){
+                          v = v*10 + expression.charAt(i)-'0';
+                          i++;
+                      }
+                      ops.add(v);
+                  }
+              }
+              List<Integer> res = new ArrayList<Integer>();
+              recall(ops,res);
+              return res;
+          }
+          public void recall(List<Integer> ops,List<Integer> res){
+              int len = ops.size();
+              if(len==1){
+                  res.add(ops.get(0));
+                  return;0
+              }
+              for(int i=1;i<len-1;i+=2){
+                  List<Integer> _ops  = new ArrayList<Integer>();
+                  for(int j=0;j<i-1;j++){
+                      _ops.add(ops.get(j));
+                  }
+                  if(ops.get(i)==-1){
+                      _ops.add(ops.get(i-1)+ops.get(i+1));
+                  }else if(ops.get(i)==-2){
+                      _ops.add(ops.get(i-1)-ops.get(i+1));
+                  }else{
+                      _ops.add(ops.get(i-1)*ops.get(i+1));
+                  }
+                  for(int j=i+2;j<len;j++){
+                      _ops.add(ops.get(j));
+                  }
+                  recall(_ops,res);
+              }
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > `((2*3)-(4*5)) = -14`回溯会多计算一次。
+
+  - 分治+记忆化
+
+    - 代码
+
+      ```java
+      class Solution {
+          static final int ADDITION = -1;
+          static final int SUBTRACTION = -2;
+          static final int MULTIPLICATION = -3;
+          public List<Integer> diffWaysToCompute(String expression) {
+              List<Integer> ops = new ArrayList<Integer>();
+              for (int i = 0; i < expression.length();) {
+                  if (!Character.isDigit(expression.charAt(i))) {
+                      if (expression.charAt(i) == '+') {
+                          ops.add(ADDITION);
+                      } else if (expression.charAt(i) == '-') {
+                          ops.add(SUBTRACTION);
+                      } else {
+                          ops.add(MULTIPLICATION);
+                      }
+                      i++;
+                  } else {
+                      int t = 0;
+                      while (i < expression.length() && Character.isDigit(expression.charAt(i))) {
+                          t = t * 10 + expression.charAt(i) - '0';
+                          i++;
+                      }
+                      ops.add(t);
+                  }
+              }
+              List<Integer>[][] dp = new List[ops.size()][ops.size()];
+              for (int i = 0; i < ops.size(); i++) {
+                  for (int j = 0; j < ops.size(); j++) {
+                      dp[i][j] = new ArrayList<Integer>();
+                  }
+              }
+              return dfs(dp, 0, ops.size() - 1, ops);
+          }
+          public List<Integer> dfs(List<Integer>[][] dp, int l, int r, List<Integer> ops) {
+              
+              return dp[l][r];
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 记忆化分治思想
+
+  - 动态规划
+
+    - 代码
+
+      ```java
+      // 动态规划
+      class Solution {
+          static final int ADDITION = -1;
+          static final int SUBTRACTION = -2;
+          static final int MULTIPLICATION = -3;
+          public List<Integer> diffWaysToCompute(String expression) {
+              List<Integer> ops = new ArrayList<Integer>();
+              for (int i = 0; i < expression.length();) {
+                  if (!Character.isDigit(expression.charAt(i))) {
+                      if (expression.charAt(i) == '+') {
+                          ops.add(ADDITION);
+                      } else if (expression.charAt(i) == '-') {
+                          ops.add(SUBTRACTION);
+                      } else {
+                          ops.add(MULTIPLICATION);
+                      }
+                      i++;
+                  } else {
+                      int t = 0;
+                      while (i < expression.length() && Character.isDigit(expression.charAt(i))) {
+                          t = t * 10 + expression.charAt(i) - '0';
+                          i++;
+                      }
+                      ops.add(t);
+                  }
+              }
+              List<Integer>[][] dp = new List[ops.size()][ops.size()];
+              for (int i = 0; i < ops.size(); i++) {
+                  for (int j = 0; j < ops.size(); j++) {
+                      dp[i][j] = new ArrayList<Integer>();
+                  }
+              }
+              for (int i=0;i<ops.size();i+=2){
+                  dp[i][i].add(ops.get(i));
+              }
+              for(int step=3;step<=ops.size();step++){
+                  for(int l = 0;l+step<=ops.size();l+=2){
+                      int r = l+step-1;
+                      for(int i=l+1;i<r;i+=2){
+                          List<Integer> left = dp[l][i-1];
+                          List<Integer> right = dp[i+1][r];
+                          for(int lv : left){
+                              for(int rv : right){
+                                  if(ops.get(i)==ADDITION){
+                                      dp[l][r].add(lv+rv);
+                                  }else if(ops.get(i)==SUBTRACTION){
+                                      dp[l][r].add(lv-rv);
+                                  }else{
+                                      dp[l][r].add(lv*rv);
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+              return dp[0][ops.size()-1];
+          }   
+      }
+      ```
+
+    - 感悟与总结
+
+      > 动态规划和记忆化分治十分类似，都是将大问题分解成小问题再进行递推。 动态规划核分治是反向分解的思想
+
