@@ -2610,3 +2610,109 @@
 
       > 动态规划和记忆化分治十分类似，都是将大问题分解成小问题再进行递推。 动态规划核分治是反向分解的思想
 
+### 2022-7-2
+
+- #### [556. 下一个更大元素 III](https://leetcode.cn/problems/next-greater-element-iii/)
+
+  - 排序+模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int nextGreaterElement(int n) {
+              List<Integer> elements = new ArrayList<Integer>();
+              while(n!=0){
+                  elements.add(n%10);
+                  n/=10;
+              }
+              int len = elements.size();
+              for(int i=1;i<len;i++){
+                  int ans = 10;
+                  int j = i-1;
+                  int j_index = j;
+                  for(;j>=0;j--){
+                      if(elements.get(j)>elements.get(i)&&elements.get(j)<ans){
+                          ans = elements.get(j);
+                          j_index = j;
+                      }
+                  }
+                  if(ans!=10){
+                      int temp = elements.get(i);
+                      elements.set(i,elements.get(j_index));
+                      elements.set(j_index,temp);
+                      List<Integer> nextSubElements = new ArrayList<Integer>();
+                      nextSubElements = elements.subList(0,i);
+                      Object[] arr = nextSubElements.toArray();
+                      Arrays.sort(arr);
+                      int p = 0;
+                      for(int k=i-1;k>=0;k--){
+                          elements.set(k,(Integer)arr[p]);
+                          p++;
+                      }
+                      long res = 0;
+                      for(int k=0;k<len;k++){
+                          res+=elements.get(k)*Math.pow(10,k);
+                      }
+                      if(res>Integer.MAX_VALUE){
+                          return -1;
+                      }
+                      return (int)res;
+                  }
+              }
+              return -1;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 借助列表数据结构存储n的各位数。
+      > 从小位向大位遍历，对于当前位，在比他小的位上查找最小且大于它的位，然后交换。
+      > 并从当前坐标将已经遍历的小位借助数组数据结构从小到大排序替换列表的子列表。以达到最终的数即大于原来的数，且大的最少。
+      >
+
+### 2022-7-4
+
+- #### [1200. 最小绝对差](https://leetcode.cn/problems/minimum-absolute-difference/)
+
+  - 排序 + 模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public List<List<Integer>> minimumAbsDifference(int[] arr) {
+              Arrays.sort(arr);
+              List<List<Integer>> res = new ArrayList<List<Integer>>();
+              int ans = Integer.MAX_VALUE;
+              int n = arr.length;
+              for(int i=0;i<n-1;i++){
+                  for(int j=i+1;j<n;j++){
+                      int value = Math.abs(arr[j]-arr[i]);
+                      if(value>ans){
+                          break;
+                      }else if(value<ans){
+                          ans = value;
+                          res.clear();
+                      }
+                      List<Integer> temp = new ArrayList<Integer>();
+                      if(arr[j]>arr[i]){
+                          temp.add(arr[i]);
+                          temp.add(arr[j]);
+                      }else{
+                          temp.add(arr[j]);
+                          temp.add(arr[i]);
+                      }
+                      res.add(temp);
+                  }
+              }
+              return res;
+      
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > ```        List<List<Integer>> res = new ArrayList<List<Integer>>();```
