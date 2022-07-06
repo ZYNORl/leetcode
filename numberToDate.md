@@ -28,6 +28,7 @@
 | [731. 我的日程安排表 II](https://leetcode.cn/problems/my-calendar-ii/) | 2022-6-6  |
 | [732. 我的日程安排表 III](https://leetcode.cn/problems/my-calendar-iii/) | 2022-6-6  |
 | [829. 连续整数求和](https://leetcode.cn/problems/consecutive-numbers-sum/) | 2022-6-3  |
+| [871. 最低加油次数](https://leetcode.cn/problems/minimum-number-of-refueling-stops/) | 2022-7-3  |
 | [875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/) | 2022-6-7  |
 | [890. 查找和替换模式](https://leetcode.cn/problems/find-and-replace-pattern/) | 2022-6-12 |
 | [926. 将字符串翻转到单调递增](https://leetcode.cn/problems/flip-string-to-monotone-increasing/) | 2022-6-11 |

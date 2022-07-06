@@ -2672,6 +2672,86 @@
       > 并从当前坐标将已经遍历的小位借助数组数据结构从小到大排序替换列表的子列表。以达到最终的数即大于原来的数，且大的最少。
       >
 
+### 2022-7-3
+
+- #### [871. 最低加油次数](https://leetcode.cn/problems/minimum-number-of-refueling-stops/)
+
+  - 动态规划
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int minRefuelStops(int target, int startFuel, int[][] stations) {
+              int n = stations.length;
+              long[] dp = new long[n+1];
+              dp[0] = startFuel;
+              for(int i=0;i<n;i++){
+                  for(int j=i;j>=0;j--){
+                      if(dp[j]>=stations[i][0]){
+                          dp[j+1] = Math.max(dp[j+1],dp[j]+stations[i][1]);
+                      }
+                  }
+              }
+              for(int i=0;i<=n;i++){
+                  if(dp[i]>=target){
+                      return i;
+                  }
+              }
+              return -1;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 动态规划
+      >
+      > dp[i] 表示加了i个加油站后能跑多远。
+      >
+      > 对于当前加油站（i），其前面的状态dp未考虑到该加油站。以判断该加油站加入后状态会不会更新。
+      >
+      > j 从大到小遍历，是防止小的dp使用了该i,结果大的dp又从小的dp处转移又一次使用了该i。i只能加一次，即一个加油站只能加一次
+
+  - 贪心 + 优先队列
+
+    - 代码
+
+      ```java
+      class Solution{
+          public int minRefuelStops(int target, int startFuel, int[][] stations){
+              PriorityQueue<Integer> pq = new PriorityQueue<Integer>((a,b)->b-a);
+              int ans = 0,prev = 0, fuel = startFuel;
+              int n = stations.length;
+              for(int i = 0; i<=n; i++){
+                  int curr = i<n ? stations[i][0] : target;
+                  fuel -= curr - prev;
+                  while(fuel<0 && !pq.isEmpty()){
+                      fuel += pq.poll();
+                      ans++;
+                  }
+                  if(fuel<0){
+                      return -1;
+                  }
+                  if(i<n){
+                      pq.offer(stations[i][1]);
+                      prev = curr;
+                  }
+              }
+              return ans;
+          }
+      
+      }
+      ```
+
+    - 感悟与总结
+
+      > 贪心
+      >
+      > 用优先队列存储已经遍历过去的加油站的加油量，其中，优先队列里面只有没有被选取的加油站的加油量。优先队列从大到小。
+      >
+      > 要想达到target,就是要在本身和前面已经选取的加油站的油量的前提下，在可以达到的其它加油站中选取加油量最大的油量，所以从已经到达且未选取的优先队列里找。
+
 ### 2022-7-4
 
 - #### [1200. 最小绝对差](https://leetcode.cn/problems/minimum-absolute-difference/)
