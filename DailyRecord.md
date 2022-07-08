@@ -2796,3 +2796,74 @@
     - 感悟与总结
 
       > ```        List<List<Integer>> res = new ArrayList<List<Integer>>();```
+
+### 2022-7-7
+
+- #### [648. 单词替换](https://leetcode.cn/problems/replace-words/)
+
+  - hash表
+
+    - 代码
+
+      ```java
+      class Solution {
+          public String replaceWords(List<String> dictionary, String sentence) {
+              String res = "";
+              String[] strs=sentence.split(" ");
+              Set<String> rootSet = new HashSet<String>();
+              for(String root : dictionary){
+                  rootSet.add(root);
+              }
+              for(int i=0;i<strs.length;i++){
+                  String str = strs[i];
+                  int len = str.length();
+                  for(int j=0;j<=len;j++){
+                      String subStr = str.substring(0, j);
+                      if(rootSet.contains(subStr)){
+                          strs[i] = subStr;
+                          break;
+                      }
+                  }
+              }
+              for(String str : strs){
+                  res += ' ';
+                  res += str;
+              }
+              return res.substring(1);
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 用`hashSet`存储词根进行映射 , 依次选择句子当中单词最小的子序列进行set映射
+
+### 2022-7-8
+
+- #### [1217. 玩筹码](https://leetcode.cn/problems/minimum-cost-to-move-chips-to-the-same-position/)
+
+  - 脑经急转弯
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int minCostToMoveChips(int[] position) {
+              int odd_sum = 0;
+              int even_sum = 0;
+              for(long pos : position){
+                  if(pos%2==1){
+                      odd_sum++;
+                  }else{
+                      even_sum++;
+                  }
+              }
+              return Math.min(odd_sum, even_sum);
+          }
+      }
+      
+      ```
+
+    - 感悟与总结
+
+      > 移两位不消耗，下标奇偶比较

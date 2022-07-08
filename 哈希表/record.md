@@ -5,3 +5,5 @@
 #### [710. 黑名单中的随机数](https://leetcode.cn/problems/random-pick-with-blacklist/)	2022-6-26
 
 #### [522. 最长特殊序列 II](https://leetcode.cn/problems/longest-uncommon-subsequence-ii/)	2022-6-29
+
+#### [648. 单词替换](https://leetcode.cn/problems/replace-words/)	2022-7-7

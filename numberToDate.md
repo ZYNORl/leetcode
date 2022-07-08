@@ -18,6 +18,7 @@
 | [532. 数组中的 k-diff 数对](https://leetcode.cn/problems/k-diff-pairs-in-an-array/) | 2022-6-16 |
 | [556. 下一个更大元素 III](https://leetcode.cn/problems/next-greater-element-iii/) | 2022-7-3  |
 | [638. 大礼包](https://leetcode.cn/problems/shopping-offers/) | 2022-6-4  |
+| [648. 单词替换](https://leetcode.cn/problems/replace-words/) | 2022-7-8  |
 | [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/) | 2022-6-20 |
 | [698. 划分为k个相等的子集](https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/) | 2022-6-7  |
 | [710. 黑名单中的随机数](https://leetcode.cn/problems/random-pick-with-blacklist/) | 2022-6-26 |
@@ -38,7 +39,7 @@
 | [1089. 复写零](https://leetcode.cn/problems/duplicate-zeros/) | 2022-6-17 |
 | [1175. 质数排列](https://leetcode.cn/problems/prime-arrangements/) | 2022-6-30 |
 | [1200. 最小绝对差](https://leetcode.cn/problems/minimum-absolute-difference/) | 2022-7-4  |
-|                                                              |           |
+| [1217. 玩筹码](https://leetcode.cn/problems/minimum-cost-to-move-chips-to-the-same-position/) | 2022-7-8  |
 |                                                              |           |
 |                                                              |           |
 |                                                              |           |
