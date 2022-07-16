@@ -2867,3 +2867,325 @@
     - 感悟与总结
 
       > 移两位不消耗，下标奇偶比较
+
+### 2022-7-9
+
+- #### [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/)
+
+  - 暴力
+
+    - 代码
+
+      ```java
+      // 暴力
+      class Solution {
+          public int lenLongestFibSubseq(int[] arr) {
+              int ans = 0;
+              int len = arr.length;
+              for(int i=0;i<len-2;i++){
+                  for(int j=i+1;j<len-1;j++){
+                      // i是第一个；j是第二个
+                      int one = i;
+                      int two = j;
+                      int count = 2;
+                      for(int k=j+1;k<len;k++){
+                          if(arr[k] == arr[one]+arr[two]){
+                              one = two;
+                              two = k;
+                              count++;
+                          }
+                      }
+                      if(count!=2){
+                          ans = Math.max(ans,count);
+                      }
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 先从何处开始的前两个，再进行递推反复交替
+
+  - 动态规划
+
+    - 代码
+
+      ```java
+      // 动态规划
+      class Solution {
+          public int lenLongestFibSubseq(int[] arr) {
+              Map<Integer,Integer> indices = new HashMap<Integer,Integer>();
+              int n = arr.length;
+              for(int i=0;i<n;i++){
+                  indices.put(arr[i],i);
+              }
+              int[][] dp = new int[n][n];
+              int ans = 0;
+              for(int i=0;i<n;i++){
+                  for(int j=i-1;j>=0 && arr[j]*2>arr[i];j--){
+                      int k = indices.getOrDefault(arr[i]-arr[j],-1);
+                      if(k>=0){
+                          dp[j][i] = Math.max(dp[k][j]+1,3);
+                      }
+                      ans = Math.max(ans,dp[j][i]);
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 先选定前两个，再进行状态转移
+
+      > 因为严格单调，所以用下标（hash）来唯一表示该元素
+
+### 2022-7-12
+
+- #### [1252. 奇数值单元格的数目](https://leetcode.cn/problems/cells-with-odd-values-in-a-matrix/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int oddCells(int m, int n, int[][] indices) {
+              int ans = 0;
+              int[][] arr = new int[m][n];
+              for(int[] indice : indices){
+                  int r = indice[0];
+                  for(int j=0;j<n;j++){
+                      arr[r][j]++;
+                  }
+                  int l = indice[1];
+                  for(int i=0;i<m;i++){
+                      arr[i][l]++;
+                  }
+              }
+              for(int i=0;i<m;i++){
+                  for(int j=0;j<n;j++){
+                      if(arr[i][j]%2==1){
+                          ans++;
+                      }
+                  }
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 无
+
+### 2022-7-13
+
+- #### [735. 行星碰撞](https://leetcode.cn/problems/asteroid-collision/)
+
+  - 列表辅助模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int[] asteroidCollision(int[] asteroids) {
+              List<Integer> myList01 = new ArrayList<Integer>();
+              List<Integer> myList02 = new ArrayList<Integer>();
+              for(int item : asteroids){
+                  myList01.add(item);
+              }
+              while(true){
+                  int n = myList01.size();
+                  for(int i=0;i<n;i++){
+                      if(myList01.get(i)*myList01.get((i+1)%n)<0 && myList01.get(i)>0 && i!=n-1){
+                          int temp = myList01.get(i) + myList01.get((i+1)%n);
+                          if(temp != 0){
+                              if(Math.abs(myList01.get(i))>Math.abs(myList01.get((i+1)%n))){
+                                  myList02.add(myList01.get(i));
+                              }else{
+                                  myList02.add(myList01.get((i+1)%n));
+                              }
+                          }
+                          i++;
+                      }else{
+                          myList02.add(myList01.get(i));
+                      }
+                  }
+                  myList01.clear();
+                  for(int item : myList02){
+                      myList01.add(item);
+                  }
+                  if(n == myList02.size()){
+                      break;
+                  }
+                  myList02.clear();
+              }
+              int[] res = new int[myList01.size()];
+              int i = 0;
+              for(int item : myList01){
+                  res[i] = item;
+                  i++;
+              }
+              return res;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 思路一分钟，边界处理一小时
+
+### 2022-7-15
+
+- #### [558. 四叉树交集](https://leetcode.cn/problems/logical-or-of-two-binary-grids-represented-as-quad-trees/)
+
+  - 递归
+
+    - 代码
+
+      ```java
+      /*
+      // Definition for a QuadTree node.
+      class Node {
+          public boolean val;
+          public boolean isLeaf;
+          public Node topLeft;
+          public Node topRight;
+          public Node bottomLeft;
+          public Node bottomRight;
+      
+          public Node() {}
+      
+          public Node(boolean _val,boolean _isLeaf,Node _topLeft,Node _topRight,Node _bottomLeft,Node _bottomRight) {
+              val = _val;
+              isLeaf = _isLeaf;
+              topLeft = _topLeft;
+              topRight = _topRight;
+              bottomLeft = _bottomLeft;
+              bottomRight = _bottomRight;
+          }
+      };
+      */
+      class Solution {
+          public Node intersect(Node quadTree1, Node quadTree2) {
+              return recall(quadTree1, quadTree2);
+          }
+          public Node recall(Node quadTree1, Node quadTree2) {
+              Node node =  new Node();
+              if(quadTree1.isLeaf && quadTree2.isLeaf){
+                  node.val = quadTree1.val | quadTree2.val;
+                  node.isLeaf = true;
+                  node.topLeft = null;
+                  node.topRight = null;
+                  node.bottomLeft = null;
+                  node.bottomRight = null;
+              }else if(quadTree1.isLeaf && !quadTree2.isLeaf){
+                  if(quadTree1.val){
+                      node.val = true;
+                      node.isLeaf = true;
+                      node.topLeft = null;
+                      node.topRight = null;
+                      node.bottomLeft = null;
+                      node.bottomRight = null;
+                  }else{
+                      node.val = false;
+                      node.isLeaf = false;
+                      node.topLeft = recall(quadTree1, quadTree2.topLeft);
+                      node.topRight = recall(quadTree1, quadTree2.topRight);
+                      node.bottomLeft = recall(quadTree1, quadTree2.bottomLeft);
+                      node.bottomRight = recall(quadTree1, quadTree2.bottomRight);
+                  }
+              }else if(!quadTree1.isLeaf && quadTree2.isLeaf){
+                  if(quadTree2.val){
+                      node.val = true;
+                      node.isLeaf = true;
+                      node.topLeft = null;
+                      node.topRight = null;
+                      node.bottomLeft = null;
+                      node.bottomRight = null;
+                  }else{
+                      node.val = false;
+                      node.isLeaf = false;
+                      node.topLeft = recall(quadTree1.topLeft, quadTree2);
+                      node.topRight = recall(quadTree1.topRight, quadTree2);
+                      node.bottomLeft = recall(quadTree1.bottomLeft, quadTree2);
+                      node.bottomRight = recall(quadTree1.bottomRight, quadTree2);
+                  }
+              }else{
+                  node.val = false;
+                  node.isLeaf = false;
+                  node.topLeft = recall(quadTree1.topLeft, quadTree2.topLeft);
+                  node.topRight = recall(quadTree1.topRight, quadTree2.topRight);
+                  node.bottomLeft = recall(quadTree1.bottomLeft, quadTree2.bottomLeft);
+                  node.bottomRight = recall(quadTree1.bottomRight, quadTree2.bottomRight);
+      
+              }
+              if(!node.isLeaf && node.topLeft.isLeaf && node.topLeft.val && node.topRight.isLeaf && node.topRight.val && node.bottomLeft.isLeaf && node.bottomLeft.val && node.bottomRight.isLeaf && node.bottomRight.val){
+                  node.val = true;
+                  node.isLeaf = true;
+                  node.topLeft = null;
+                  node.topRight = null;
+                  node.bottomLeft = null;
+                  node.bottomRight = null;
+              }
+              return node;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 四叉树同二叉树
+      >
+      > 注意递归的边界条件
+
+### 2022-7-16
+
+- #### [剑指 Offer II 041. 滑动窗口的平均值](https://leetcode.cn/problems/qIsx9U/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class MovingAverage {
+          List<Integer> arr;
+          int Size;
+          /** Initialize your data structure here. */
+          public MovingAverage(int size) {
+              arr = new ArrayList<Integer>();
+              Size = size;
+          }
+          
+          public double next(int val) {
+              arr.add(val);
+              int n = arr.size();
+              int right = n-1;
+              int left = Math.max(0, n-Size);
+              double temp = 0;
+              int jishu = 0;
+              while(left<=right){
+                  temp += arr.get(left);
+                  jishu++;
+                  left++;
+              }
+              return temp/jishu;
+          }
+      }
+      
+      /**
+       * Your MovingAverage object will be instantiated and called as such:
+       * MovingAverage obj = new MovingAverage(size);
+       * double param_1 = obj.next(val);
+       */
+      ```
+
+    - 感悟与总结
+
+      > 无
+

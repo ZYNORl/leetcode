@@ -1,6 +1,7 @@
 |                           题目编号                           | 刷题日期  |
 | :----------------------------------------------------------: | :-------: |
 | [剑指 Offer II 029. 排序的循环链表](https://leetcode.cn/problems/4ueAj6/) | 2022-6-18 |
+| [剑指 Offer II 041. 滑动窗口的平均值](https://leetcode.cn/problems/qIsx9U/) | 2022-7-16 |
 |  [67. 二进制求和](https://leetcode.cn/problems/add-binary/)  | 2022-6-9  |
 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/) | 2022-6-8  |
 | [241. 为运算表达式设计优先级](https://leetcode.cn/problems/different-ways-to-add-parentheses/) | 2022-7-1  |
@@ -17,6 +18,7 @@
 | [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/) | 2022-6-3  |
 | [532. 数组中的 k-diff 数对](https://leetcode.cn/problems/k-diff-pairs-in-an-array/) | 2022-6-16 |
 | [556. 下一个更大元素 III](https://leetcode.cn/problems/next-greater-element-iii/) | 2022-7-3  |
+| [558. 四叉树交集](https://leetcode.cn/problems/logical-or-of-two-binary-grids-represented-as-quad-trees/) | 2022-7-15 |
 | [638. 大礼包](https://leetcode.cn/problems/shopping-offers/) | 2022-6-4  |
 | [648. 单词替换](https://leetcode.cn/problems/replace-words/) | 2022-7-8  |
 | [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/) | 2022-6-20 |
@@ -28,8 +30,10 @@
 | [730. 统计不同回文子序列](https://leetcode.cn/problems/count-different-palindromic-subsequences/) | 2022-6-10 |
 | [731. 我的日程安排表 II](https://leetcode.cn/problems/my-calendar-ii/) | 2022-6-6  |
 | [732. 我的日程安排表 III](https://leetcode.cn/problems/my-calendar-iii/) | 2022-6-6  |
+| [735. 行星碰撞](https://leetcode.cn/problems/asteroid-collision/) | 2022-7-13 |
 | [829. 连续整数求和](https://leetcode.cn/problems/consecutive-numbers-sum/) | 2022-6-3  |
 | [871. 最低加油次数](https://leetcode.cn/problems/minimum-number-of-refueling-stops/) | 2022-7-3  |
+| [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/) | 2022-7-9  |
 | [875. 爱吃香蕉的珂珂](https://leetcode.cn/problems/koko-eating-bananas/) | 2022-6-7  |
 | [890. 查找和替换模式](https://leetcode.cn/problems/find-and-replace-pattern/) | 2022-6-12 |
 | [926. 将字符串翻转到单调递增](https://leetcode.cn/problems/flip-string-to-monotone-increasing/) | 2022-6-11 |
@@ -40,7 +44,7 @@
 | [1175. 质数排列](https://leetcode.cn/problems/prime-arrangements/) | 2022-6-30 |
 | [1200. 最小绝对差](https://leetcode.cn/problems/minimum-absolute-difference/) | 2022-7-4  |
 | [1217. 玩筹码](https://leetcode.cn/problems/minimum-cost-to-move-chips-to-the-same-position/) | 2022-7-8  |
-|                                                              |           |
+| [1252. 奇数值单元格的数目](https://leetcode.cn/problems/cells-with-odd-values-in-a-matrix/) | 2022-7-12 |
 |                                                              |           |
 |                                                              |           |
 |                                                              |           |

@@ -13,3 +13,5 @@
 #### [241. 为运算表达式设计优先级](https://leetcode.cn/problems/different-ways-to-add-parentheses/)	2022-7-1
 
 #### [729. 我的日程安排表 I](https://leetcode.cn/problems/my-calendar-i/)	2022-7-3
+
+#### [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/)	2022-7-9
