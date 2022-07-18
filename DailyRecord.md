@@ -3189,3 +3189,137 @@
 
       > 无
 
+### 2022-7-17
+
+- #### [565. 数组嵌套](https://leetcode.cn/problems/array-nesting/)
+
+  - 模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int arrayNesting(int[] nums) {
+              Set<Integer> mySet = new HashSet<Integer>();
+              Set<Integer> allSet = new HashSet<Integer>();
+              int ans = 0;
+              for(int num : nums){
+                  if(allSet.contains(num)){
+                      continue;
+                  }
+                  int temp = num;
+                  int max_n = 0;
+                  while(!mySet.contains(temp)){
+                      mySet.add(temp);
+                      allSet.add(temp);
+                      max_n++;
+                      temp = nums[temp];
+                  }
+                  ans = Math.max(ans, max_n);
+                  mySet.clear();
+              }
+              return ans;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 一个链条组成一个环，每个环不相交。
+
+### 2022-7-18
+
+- #### [749. 隔离病毒](https://leetcode.cn/problems/contain-virus/)
+
+  - 广度优先遍历
+
+    - 代码
+
+      ```java
+      class Solution {
+          static int[][] dirs = {{-1,0},{1,0},{0,-1},{0,1}};
+          public int containVirus(int[][] isInfected) {
+              int m = isInfected.length,n = isInfected[0].length;
+              int ans = 0;
+              while(true){
+                  List<Set<Integer>> neighbors = new ArrayList<Set<Integer>>();
+                  List<Integer> firewalls = new ArrayList<Integer>();
+                  for(int i=0;i<m;i++){
+                      for(int j=0;j<n;j++){
+                          if(isInfected[i][j]==1){
+                              Queue<int[]> queue = new ArrayDeque<int[]>();
+                              queue.offer(new int[]{i,j});
+                              Set<Integer> neighbor = new HashSet<Integer>();
+                              int firewall = 0,idx = neighbors.size()+1;
+                              isInfected[i][j] = -idx;
+                              
+                              while(!queue.isEmpty()){
+                                  int[] arr = queue.poll();
+                                  int x = arr[0],y = arr[1];
+                                  for(int d = 0;d<4;d++){
+                                      int nx = x+dirs[d][0],ny = y+dirs[d][1];
+                                      if(nx>=0&&nx<m&&ny>=0&&ny<n){
+                                          if(isInfected[nx][ny]==1){
+                                              queue.offer(new int[]{nx,ny});
+                                              isInfected[nx][ny] = -idx;
+                                          }else if(isInfected[nx][ny]==0){
+                                              firewall++;
+                                              neighbor.add(getHash(nx,ny));
+                                          }
+                                      }
+                                  }
+                              }
+                              neighbors.add(neighbor);
+                              firewalls.add(firewall);
+                          }
+      
+                      }
+                  }
+                  if(neighbors.isEmpty()){
+                      break;
+                  }
+                  // 找到对周围威胁最大的病毒区域
+                  int idx = 0;
+                  for(int i=1;i<neighbors.size();i++){
+                      if(neighbors.get(i).size()>neighbors.get(idx).size()){
+                          idx = i;
+                      }
+                  }
+                  ans += firewalls.get(idx);
+                  // 把最大的病毒区域设置为2，不影响下面的循环（排除在外）。把其余的病毒区域恢复为1
+                  for(int i=0;i<m;i++){
+                      for(int j=0;j<n;j++){
+                          if(isInfected[i][j]<0){
+                              if(isInfected[i][j]==-idx-1){
+                                  isInfected[i][j]=2;
+                              }else{
+                                  isInfected[i][j]=1;
+                              }
+                          }
+                      }
+                  }
+                  // 将其余的病毒区域进行隔日扩张
+                  for(int i=0;i<neighbors.size();i++){
+                      if(i!=idx){
+                          for(int val:neighbors.get(i)){
+                              int x = val>>16,y = val&((1<<16)-1);
+                              isInfected[x][y]=1;
+                          }
+                      }
+                  }
+                  if(neighbors.size()==1){
+                      break;
+                  }
+              }
+              return ans;
+          }
+          public int getHash(int x,int y){
+              return (x<<16)^y;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > https://leetcode.cn/problems/contain-virus/solution/ge-chi-bing-du-by-leetcode-solution-vn9m/
+
