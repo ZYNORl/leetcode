@@ -47,7 +47,7 @@
 | [1200. 最小绝对差](https://leetcode.cn/problems/minimum-absolute-difference/) | 2022-7-4  |
 | [1217. 玩筹码](https://leetcode.cn/problems/minimum-cost-to-move-chips-to-the-same-position/) | 2022-7-8  |
 | [1252. 奇数值单元格的数目](https://leetcode.cn/problems/cells-with-odd-values-in-a-matrix/) | 2022-7-12 |
-|                                                              |           |
+| [1260. 二维网格迁移](https://leetcode.cn/problems/shift-2d-grid/) | 2022-7-20 |
 |                                                              |           |
 |                                                              |           |
 |                                                              |           |

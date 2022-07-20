@@ -3323,3 +3323,63 @@
 
       > https://leetcode.cn/problems/contain-virus/solution/ge-chi-bing-du-by-leetcode-solution-vn9m/
 
+### 2022-7-20
+
+- #### [1260. 二维网格迁移](https://leetcode.cn/problems/shift-2d-grid/)
+
+  - 简单模拟
+
+    - 代码
+
+      ```java
+      class Solution {
+          public List<List<Integer>> shiftGrid(int[][] grid, int k) {
+              while(k>0){
+                  List<Integer> temp = new ArrayList<Integer>();
+                  int j = 1;
+                  while(j<=grid[0].length){
+                      j = j%(grid[0].length);
+                      temp = assign(grid, temp, j);
+                      for(int r = 0;r<grid.length;r++){
+                          grid[r][j] = grid[r][0];
+                          grid[r][0] = temp.get(r);
+                      }
+                      if(j==0){
+                          break;
+                      }
+                      j++;
+                      temp.clear();
+                  }
+                  int val = grid[0][0];
+                  for(int row=grid.length-1;row>=0;row--){
+                      grid[(row+1)%grid.length][0] = grid[row][0];
+                      if(row==0){
+                          grid[(row+1)%grid.length][0] = val;
+                      }
+                  }
+                  k--;
+              }
+      
+              List<List<Integer>> res = new ArrayList<List<Integer>>();
+              for(int i=0;i<grid.length;i++){
+                  List<Integer> r_t = new ArrayList<Integer>();
+                  for(int j=0;j<grid[0].length;j++){
+                      r_t.add(grid[i][j]);
+      
+                  }
+                  res.add(r_t);
+              }
+              return res;
+          }
+          public List<Integer> assign(int[][] grid, List<Integer> temp,int col){
+              for(int i=0;i<grid.length;i++){
+                  temp.add(grid[i][col]);
+              }
+              return temp;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 无
