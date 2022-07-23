@@ -3383,3 +3383,262 @@
     - 感悟与总结
 
       > 无
+
+### 2022-7-21
+
+- #### [814. 二叉树剪枝](https://leetcode.cn/problems/binary-tree-pruning/)
+
+  - 递归 + 先序遍历
+
+    - 代码
+
+      ```java
+      /**
+       * Definition for a binary tree node.
+       * public class TreeNode {
+       *     int val;
+       *     TreeNode left;
+       *     TreeNode right;
+       *     TreeNode() {}
+       *     TreeNode(int val) { this.val = val; }
+       *     TreeNode(int val, TreeNode left, TreeNode right) {
+       *         this.val = val;
+       *         this.left = left;
+       *         this.right = right;
+       *     }
+       * }
+       */
+      /**
+       * Definition for a binary tree node.
+       * public class TreeNode {
+       *     int val;
+       *     TreeNode left;
+       *     TreeNode right;
+       *     TreeNode() {}
+       *     TreeNode(int val) { this.val = val; }
+       *     TreeNode(int val, TreeNode left, TreeNode right) {
+       *         this.val = val;
+       *         this.left = left;
+       *         this.right = right;
+       *     }
+       * }
+       */
+      class Solution {
+          int tag = 0;
+          public TreeNode pruneTree(TreeNode root) {
+              PreTravel(root,null, -1);
+              if(tag==1){
+                  return null;
+              }
+              return root;
+          }
+          public void PreTravel(TreeNode root,TreeNode parent,int flag){
+              if(root==null){
+                  return;
+              }
+              if(!recall(root)){
+                  if(flag==0){
+                      parent.left = null;
+                      PreTravel(root.right, root, 1);
+                  }else if(flag==1){
+                      parent.right = null;
+                      PreTravel(root.left, root, 0);
+                  }else{
+                      root = null;
+                      tag = 1;
+                      return;
+                  }
+              }else{
+                  PreTravel(root.left, root, 0);
+                  PreTravel(root.right, root, 1);
+              }
+          }
+          public boolean recall(TreeNode root){
+              // true 表示不删除
+              if(root.val == 1){
+                  return true;
+              }
+              if(root.left==null && root.right==null){
+                  return false;
+              }else if(root.left==null){
+                  return recall(root.right);
+              }else if(root.right==null){
+                  return recall(root.left);
+              }else{
+                  return recall(root.left) || recall(root.right);
+              }
+              
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > `recall`递归从上至下递归，找到以该根节点的待删除子树，然后通过先序遍历找到该节点的父节点对其进行删除。
+
+  - 后续遍历 + 自底向上
+
+    - 代码
+
+      ```java
+      // 自底向上, 后序遍历
+      class Solution{
+          public TreeNode pruneTree(TreeNode root){
+              if(root==null){
+                  return null;
+              }
+              root.left = pruneTree(root.left);
+              root.right = pruneTree(root.right);
+              if(root.left==null&&root.right==null&&root.val==0){
+                  return null;
+              }
+              return root;
+          }
+      }
+      ```
+
+      
+
+### 2022-7-22
+
+- #### [757. 设置交集大小至少为2](https://leetcode.cn/problems/set-intersection-size-at-least-two/)
+
+  - 贪心 + 排序
+
+    - 代码
+
+      ```java
+      class Solution {
+          public int intersectionSizeTwo(int[][] intervals) {
+              int n = intervals.length;
+              int res = 0;
+              int m = 2;
+              Arrays.sort(intervals, (a,b)->{
+                  if(a[0]==b[0]){
+                      return b[1]-a[1];
+                  }
+                  return a[0]-b[0];
+              });
+              List<Integer>[] temp = new List[n];
+              for(int i=0;i<n;i++){
+                  temp[i] = new ArrayList<Integer>();
+              }
+              for(int i=n-1;i>=0;i--){
+                  for(int j = intervals[i][0],k = temp[i].size();k<m;j++,k++){
+                      res++;
+                      help(intervals, temp, i-1, j);
+                  }
+              }
+              return res;
+      
+          }
+          public void help(int[][] intervals, List<Integer>[] temp, int pos, int num){
+              for(int i=pos;i>=0;i--){
+                  if(intervals[i][1]<num){
+                      break;
+                  }
+                  temp[i].add(num);
+              }
+      
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > 进行从小到达排序，那么贪心选取最右边最大的子区间的左边界的值。这样，如果比左边子区间的左边值大的化，可以尽可能的代替其某些值`temp`，使得整个res最小。
+
+### 2022-7-23
+
+- #### [剑指 Offer II 115. 重建序列](https://leetcode.cn/problems/ur2n8P/)
+
+  - 拓扑排序
+
+    - 代码
+
+      ```java
+      // 我的解法 -- 超时
+      // 1. nums里面的元素sequences都包含。
+      // 2. nums里面每个元素的相邻位置sequences都体现。
+      class Solution {
+          public boolean sequenceReconstruction(int[] nums, int[][] sequences) {
+              int n = nums.length;
+              Set<Integer>[] arr = new Set[n+1];
+              Set<Integer> mySet = new HashSet<Integer>();
+              for(int i=0;i<=n;i++){
+                  arr[i] = new HashSet<Integer>();
+              }
+              for(int[] sequence : sequences){
+                  int len = sequence.length;
+                  for(int j=1;j<len;j++){
+                      int pre = sequence[j-1];
+                      int next = sequence[j];
+                      mySet.add(sequence[j-1]);
+                      arr[pre].add(pre);
+                  }
+                  mySet.add(sequence[len-1]);
+              }
+              for(int i=0;i<n;i++){
+                  if(mySet.contains(nums[i])){
+                      if(i+1==n){
+                          return true;
+                      }
+                      if(arr[nums[i]].contains(nums[i+1])){
+                          continue;
+                      }else{
+                          return false;
+                      }
+                  }else{
+                      return false;
+                  }
+              }
+              return false;
+          }
+      }
+      /////////////////
+      // 官方-拓扑排序
+      class Solution{
+          public boolean sequenceReconstruction(int[] nums, int[][] sequences){
+              int n = nums.length;
+              int[] indegrees = new int[n+1]; // 顶点入度
+              Set<Integer>[] grah = new Set[n+1];
+              for(int i=1;i<=n;i++){
+                  grah[i] = new HashSet<Integer>(); // 根据相邻节点的关系通过邻接链表建立有向图
+              }
+              for(int[] sequence : sequences){
+                  int size = sequence.length;
+                  for(int i=1;i<size;i++){
+                      int pre = sequence[i-1];
+                      int next = sequence[i];
+                      if(grah[pre].add(next)){
+                          indegrees[next]++;
+                      }
+                  }
+              }
+              Queue<Integer> queue = new ArrayDeque<Integer>(); // 入度为0的节点队列，拓扑排序的起点。
+              for(int i=1;i<=n;i++){
+                  if(indegrees[i]==0){
+                      queue.offer(i);
+                  }
+              }
+              while(!queue.isEmpty()){ // 拓扑排序不唯一, 由两种情况导致：1.nums不唯一；2.nums不是最短。
+                  if(queue.size()>1){ // 如果有多个起点，说明拓扑排序不唯一，可以说明nums不唯一。
+                      return false;  // 如果nums太长，也即nums里面有元素sequences没有包含，那么该元素的入度也为0,导致拓扑排序不唯一，可以说明nums过长。
+                  }
+                  int num = queue.poll();
+                  Set<Integer> set = grah[num];
+                  for(int next : set){
+                      indegrees[next]--;
+                      if(indegrees[next] == 0){
+                          queue.offer(next);
+                      }
+                  }
+              }
+              return true;
+          }
+      }
+      ```
+
+    - 感悟与总结
+
+      > https://leetcode.cn/problems/ur2n8P/solution/zhong-jian-xu-lie-by-leetcode-solution-urxc/

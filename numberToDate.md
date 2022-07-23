@@ -2,6 +2,7 @@
 | :----------------------------------------------------------: | :-------: |
 | [剑指 Offer II 029. 排序的循环链表](https://leetcode.cn/problems/4ueAj6/) | 2022-6-18 |
 | [剑指 Offer II 041. 滑动窗口的平均值](https://leetcode.cn/problems/qIsx9U/) | 2022-7-16 |
+| [剑指 Offer II 115. 重建序列](https://leetcode.cn/problems/ur2n8P/) | 2022-7-23 |
 |  [67. 二进制求和](https://leetcode.cn/problems/add-binary/)  | 2022-6-9  |
 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/) | 2022-6-8  |
 | [241. 为运算表达式设计优先级](https://leetcode.cn/problems/different-ways-to-add-parentheses/) | 2022-7-1  |
@@ -33,6 +34,8 @@
 | [732. 我的日程安排表 III](https://leetcode.cn/problems/my-calendar-iii/) | 2022-6-6  |
 | [735. 行星碰撞](https://leetcode.cn/problems/asteroid-collision/) | 2022-7-13 |
 | [749. 隔离病毒](https://leetcode.cn/problems/contain-virus/) | 2022-7-18 |
+| [757. 设置交集大小至少为2](https://leetcode.cn/problems/set-intersection-size-at-least-two/) | 2022-7-22 |
+| [814. 二叉树剪枝](https://leetcode.cn/problems/binary-tree-pruning/) | 2022-7-21 |
 | [829. 连续整数求和](https://leetcode.cn/problems/consecutive-numbers-sum/) | 2022-6-3  |
 | [871. 最低加油次数](https://leetcode.cn/problems/minimum-number-of-refueling-stops/) | 2022-7-3  |
 | [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/) | 2022-7-9  |
